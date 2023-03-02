@@ -1,0 +1,27 @@
+<plugin>
+    <groupId>com.gluonhq</groupId>
+    <artifactId>gluonfx-maven-plugin</artifactId>
+    <version>1.0.12</version>
+    <configuration>
+        <mainClass>
+            com.gmail.alexejkrawez.site_scrapper.Launcher
+        </mainClass>
+        <reflectionList>
+            <list>com.gmail.alexejkrawez.site_scrapper.SiteScrapper</list>
+            <list>com.gmail.alexejkrawez.site_scrapper.Controller</list>
+            <list>com.sun.javafx.application.PlatformImpl</list>
+            <list>com.sun.glass.ui.Application</list>
+            <list>com.sun.glass.ui.win.WinApplication</list>
+            <list>javafx.fxml.FXML</list>
+            <list>javafx.scene.layout.AnchorPane</list>
+            <list>javafx.scene.layout.HBox</list>
+            <list>javafx.scene.control.ListView</list>
+            <list>javafx.scene.layout.HBox</list>
+            <list>org.apache.commons.logging.impl.Log4JLogger</list>
+        </reflectionList>
+        <nativeImageArgs>
+            <nativeImageArg>--allow-incomplete-classpath</nativeImageArg>
+        </nativeImageArgs>
+        <runtimeArgs>-Xmx200m</runtimeArgs>
+    </configuration>
+</plugin>
