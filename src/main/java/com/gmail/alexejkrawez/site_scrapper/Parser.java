@@ -1,5 +1,9 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +16,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +24,9 @@ import java.util.List;
 
 public class Parser {
 
+    private static final Logger log = LoggerFactory.getLogger(Parser.class);
+    private static Document document;
+    private static DocumentCreator documentCreator;
 
 //    private static final String CHAPTERS = "/html/body/div[3]/div/div/div/div[2]/div[2]/div[3]/div/div[2]/div[1]/div[1]/div";
 //    private static final String FOOTER = "footer__nav-link";
@@ -33,11 +41,14 @@ public class Parser {
     //    private static final String CHAPTER_CONTAINER = "div[@class='reader-container container container_center']";
     private static final String CHAPTER_CONTAINER = "div.reader-container.container.container_center";
 
-    private static final Document document = null;
-    private static final Logger log = LoggerFactory.getLogger(Parser.class);
 
-    public static void getData(String url) {
-
+    protected static void getData(String url) {
+        documentCreator = new DocumentCreator();
+        documentCreator.createDocument("123");
+        documentCreator.addTextParagraph("VALERA!^p Помоги, \nпожажа. . .");
+        documentCreator.createImg("https://ranobelib.me/uploads/ranobe/ascendance-of-a-bookworm-novel/chapters/1795657/a674b50a-1ef1-4a92-8df7-9ed4f17981c3_R198.jpg");
+        documentCreator.createImg("https://cover.imglib.info/uploads/cover/ascendance-of-a-bookworm-novel/cover/SyZ8gnRS2bI5_250x350.jpg");
+        documentCreator.saveDocument("456");
         //create a browser
         EdgeOptions options = new EdgeOptions();
 //        options.addArguments("window-size=1920x1080"); //not working?
@@ -99,10 +110,11 @@ public class Parser {
     private static void parseData(Element element) {
         switch (element.tagName()) {
             case "p":
-                element.text();
-                log.info(element.text());
+                documentCreator.addTextParagraph(element.text());
+//                log.info(element.text());
                 break;
             case "div":
+//                documentCreator.createImg("")
                 element.firstElementChild().attr("data-src");
                 log.info(element.firstElementChild().attr("data-src"));
                 break;
@@ -111,78 +123,20 @@ public class Parser {
         }
     }
 
-    //TODO: поиск ссылки на следующую главу или всё
-    //TODO: наполнение главы
+    //TODO: поиск ссылки на следующую главу или всё -
+    //TODO: наполнение главы +
     //TODO: переход на следующую интернет-страницу и повтор
     //TODO: возможно вордовские объекты-документы делать новые (возможно через 5-10 глав) и потом склеивать их.
     //TODO: или даже после определённого количества глав временно их выгружать, а то поломается на 700+ главе и кирдык
     //TODO: сделать кнопочку+поле для записи только ограниченного числа глав, а не до победы
 
-    //TODO: метод с созданием вордовского документа
-    //TODO: метод и переменная, содержащие стандартный абзац для текста с настроенным стилем (или стиль можно применить глобально?)
+    //TODO: метод с созданием вордовского документа +
+    //TODO: метод и переменная, содержащие стандартный абзац для текста с настроенным стилем (или стиль можно применить глобально?) +
     //TODO: метод и переменная, содержащие стандартный заголовок главы с настроенным стилем
     //TODO: метод с проверкой ошибок в этом абзаце
     //TODO: метод с добавлением текста в стандартный абзац и (сразу или нет?) добавлением в документ
     //TODO: метод с добавлением разрыва страницы в конце каждой главы
     //TODO: сохранение документа
 
-//    private static void fillDocument() {
-//        try {
-//            WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
-//            MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
-//            mainDocumentPart.addStyledParagraphOfText("Title", "Hello World!");
-//            mainDocumentPart.addParagraphOfText("Welcome To Baeldung");
-//
-//            File exportFile = new File("welcome.docx");
-//            wordPackage.save(exportFile);
-//        } catch (Docx4JException e) {
-//            log.error(e.getLocalizedMessage());
-//        }
-//    }
 
-//    private static void style() {
-//        ObjectFactory factory = Context.getWmlObjectFactory();
-//        P p = factory.createP();
-//        R r = factory.createR();
-//        Text t = factory.createText();
-//        t.setValue("Welcome To Baeldung");
-//        r.getContent().add(t);
-//        p.getContent().add(r);
-//        RPr rpr = factory.createRPr();
-//        BooleanDefaultTrue b = new BooleanDefaultTrue();
-//        rpr.setB(b);
-//        rpr.setI(b);
-//        rpr.setCaps(b);
-//        Color green = factory.createColor();
-//        green.setVal("green");
-//        rpr.setColor(green);
-//        r.setRPr(rpr);
-//        mainDocumentPart.getContent().add(p);
-//        File exportFile = new File("welcome.docx");
-//        wordPackage.save(exportFile);
-//    }
-//
-//    private static void createImg() {
-//        File image = new File("image.jpg" );
-//        byte[]fileContent = Files.readAllBytes(image.toPath());
-//        BinaryPartAbstractImage imagePart = BinaryPartAbstractImage
-//                .createImagePart(wordPackage, fileContent);
-//        Inline inline = imagePart.createImageInline(
-//                "Baeldung Image (filename hint)", "Alt Text", 1, 2, false);
-//        P Imageparagraph = addImageToParagraph(inline);
-//        mainDocumentPart.getContent().add(Imageparagraph);
-//    }
-
-//    private static void addImgToParagraph() {
-//        private static P addImageToParagraph(Inline inline) {
-//            ObjectFactory factory = new ObjectFactory();
-//            P p = factory.createP();
-//            R r = factory.createR();
-//            p.getContent().add(r);
-//            Drawing drawing = factory.createDrawing();
-//            r.getContent().add(drawing);
-//            drawing.getAnchorOrInline().add(inline);
-//            return p;
-//        }
-//    }
 }

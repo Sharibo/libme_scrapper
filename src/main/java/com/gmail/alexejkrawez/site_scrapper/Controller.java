@@ -55,7 +55,7 @@ public class Controller {
     protected void buttonAddLink() {
         String link = addLink.getText();
 //        Parser.getData(link);
-        Parser.getData("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002");
+        Parser.getData("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
     }
 
     @FXML
