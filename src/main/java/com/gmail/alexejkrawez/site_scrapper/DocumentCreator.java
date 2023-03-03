@@ -1,7 +1,5 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
-import jakarta.xml.bind.JAXBException;
-import org.docx4j.XmlUtils;
 import org.docx4j.dml.wordprocessingDrawing.Inline;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -9,12 +7,9 @@ import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Parts;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
-import org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart;
-import org.docx4j.openpackaging.parts.WordprocessingML.EndnotesPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.FontTablePart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart;
-import org.docx4j.wml.BooleanDefaultTrue;
 import org.docx4j.wml.Color;
 import org.docx4j.wml.Drawing;
 import org.docx4j.wml.Jc;
@@ -25,21 +20,14 @@ import org.docx4j.wml.PPr;
 import org.docx4j.wml.PPrBase;
 import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
-import org.docx4j.wml.Styles;
 import org.docx4j.wml.Text;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
 
 public class DocumentCreator {
 
@@ -117,7 +105,7 @@ public class DocumentCreator {
     }
 
     protected void saveDocument(String name) {
-        String path = "E:" + File.separator;
+        String path = "E:" + File.separator; //TODO заменить на адекватное
         File file = new File(path + name + ".docx");
         try {
             word.save(file);
@@ -139,9 +127,7 @@ public class DocumentCreator {
         document.getContent().add(paragraph);
     }
 
-    protected void createImg(String source) {
-
-        try {
+    private Inline createImg(String source) throws Exception {
             URL url = new URL(source);
             InputStream is = url.openStream();
             ByteArrayOutputStream bus = new ByteArrayOutputStream();
@@ -163,41 +149,28 @@ public class DocumentCreator {
             id1 += 2;
             id2 += 2;
 
-            P Imageparagraph = addImgToParagraph(image);
-            document.getContent().add(Imageparagraph);
+            return image;
+    }
+
+    protected void addImgParagraph(String source) {
+        Inline image = null;
+
+        try {
+            image = createImg(source);
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
         }
 
-//
-////        Connection.Response resultImageResponse = Jsoup.connect(image).cookies(cookies)
-////                .ignoreContentType(true).execute();
-////        byte[] fileContent = new byte[0];
-//        try {
-//            fileContent = Files.readAllBytes(image.toPath());
-//            BinaryPartAbstractImage imagePart = BinaryPartAbstractImage
-//                    .createImagePart(word, fileContent);
-//            Inline inline = imagePart.createImageInline(
-//                    "Baeldung Image (filename hint)", "Alt Text", 1, 2, false); //TODO всё уникальное
-//
-//            P Imageparagraph = addImgToParagraph(inline);
-//            document.getContent().add(Imageparagraph);
-//        } catch (Exception e) {
-//            log.error(e.getLocalizedMessage());
-//        }
-    }
-
-    private P addImgToParagraph(Inline image) {
         ObjectFactory factory = Context.getWmlObjectFactory();
         P paragraph = factory.createP();
         paragraph.setPPr(paragraphImageProperties);
         R wrapper = factory.createR();
         Drawing drawing = factory.createDrawing();
 
-        paragraph.getContent().add(wrapper);
-        wrapper.getContent().add(drawing);
         drawing.getAnchorOrInline().add(image);
-        return paragraph;
+        wrapper.getContent().add(drawing);
+        paragraph.getContent().add(wrapper);
+        document.getContent().add(paragraph);
     }
 
 //    private void style() {

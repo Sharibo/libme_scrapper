@@ -1,5 +1,6 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
+import org.checkerframework.checker.nullness.Opt;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class Parser {
 
@@ -46,8 +48,8 @@ public class Parser {
         documentCreator = new DocumentCreator();
         documentCreator.createDocument("123");
         documentCreator.addTextParagraph("VALERA!^p Помоги, \nпожажа. . .");
-        documentCreator.createImg("https://ranobelib.me/uploads/ranobe/ascendance-of-a-bookworm-novel/chapters/1795657/a674b50a-1ef1-4a92-8df7-9ed4f17981c3_R198.jpg");
-        documentCreator.createImg("https://cover.imglib.info/uploads/cover/ascendance-of-a-bookworm-novel/cover/SyZ8gnRS2bI5_250x350.jpg");
+        documentCreator.addImgParagraph("https://ranobelib.me/uploads/ranobe/ascendance-of-a-bookworm-novel/chapters/1795657/a674b50a-1ef1-4a92-8df7-9ed4f17981c3_R198.jpg");
+        documentCreator.addImgParagraph("https://cover.imglib.info/uploads/cover/ascendance-of-a-bookworm-novel/cover/SyZ8gnRS2bI5_250x350.jpg");
         documentCreator.saveDocument("456");
         //create a browser
         EdgeOptions options = new EdgeOptions();
@@ -114,8 +116,12 @@ public class Parser {
 //                log.info(element.text());
                 break;
             case "div":
+                Optional<String> source = Optional.of(element.firstElementChild().attr("data-src"));
+                source.ifPresentOrElse(url -> documentCreator.addImgParagraph(url),
+                                        () -> log.error("Image not found! " + element.outerHtml()));
+//                documentCreator.addImgParagraph(element.firstElementChild().attr("data-src"));
 //                documentCreator.createImg("")
-                element.firstElementChild().attr("data-src");
+
                 log.info(element.firstElementChild().attr("data-src"));
                 break;
             default:
