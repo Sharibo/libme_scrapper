@@ -56,6 +56,7 @@ public class Controller {
         String link = addLink.getText();
 //        Parser.getData(link);
         Parser.getData("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
+//        Parser.getData("https://ranobelib.me/quan-zhi-gao-shou-novel/v1/c0?bid=10511&ui=1709435"); //TODO: затычка
     }
 
     @FXML

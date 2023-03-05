@@ -10,6 +10,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import org.docx4j.openpackaging.parts.WordprocessingML.FontTablePart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart;
+import org.docx4j.wml.Br;
 import org.docx4j.wml.Color;
 import org.docx4j.wml.Drawing;
 import org.docx4j.wml.Jc;
@@ -20,6 +21,7 @@ import org.docx4j.wml.PPr;
 import org.docx4j.wml.PPrBase;
 import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
+import org.docx4j.wml.STBrType;
 import org.docx4j.wml.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +42,17 @@ public class DocumentCreator {
     private static P paragraph;
     private static PPr paragraphProperties;
     private static PPr paragraphImageProperties;
+    private static PPr chapterProperties;
     private static PPrBase.PStyle paragraphStyle;
+    private static PPrBase.PStyle chapterStyle;
     private static R wrapper;
     private static Text text;
     private static RPr propertiesText;
     private static Drawing drawing;
     private static Color color;
-    private int id1 = 1;
-    private int id2 = 2;
+    private static int id1 = 1;
+    private static int id2 = 2;
+    private static int count = 0;
 
 //    public FontTablePart getFontTablePart();
 //    public StyleDefinitionsPart getStyleDefinitionsPart();
@@ -82,7 +87,7 @@ public class DocumentCreator {
 
         ObjectFactory factory = Context.getWmlObjectFactory();
         // mainDocumentPart > paragraph + paragraphProperties > wrapper > text + drawing + (propertiesText > color + B + I + U + caps)
-        paragraph = factory.createP();
+
         paragraphProperties = factory.createPPr();
         paragraphImageProperties = factory.createPPr();
 //        styles.getStyleById("Title").setPPr(paragraphProperties);
@@ -90,18 +95,24 @@ public class DocumentCreator {
         paragraphStyle = factory.createPPrBasePStyle();
         paragraphStyle.setVal("Normal");
         paragraphProperties.setPStyle(paragraphStyle);
-        Jc justification = factory.createJc();
-        justification.setVal(JcEnumeration.LEFT);
-        paragraphProperties.setJc(justification);
-        justification.setVal(JcEnumeration.CENTER);
-        paragraphImageProperties.setJc(justification);
+        Jc justificationLeft = factory.createJc();
+        justificationLeft.setVal(JcEnumeration.LEFT);
+        paragraphProperties.setJc(justificationLeft);
+        Jc justificationCenter = factory.createJc();
+        justificationCenter.setVal(JcEnumeration.CENTER);
+        paragraphImageProperties.setJc(justificationCenter);
+
+        chapterProperties = factory.createPPr();;
+        chapterStyle = factory.createPPrBasePStyle();
+        chapterStyle.setVal("Heading1");
+        chapterProperties.setPStyle(chapterStyle);
 //        paragraph.setPPr(paragraphProperties);
 
 //        wrapper = factory.createR();
 //        text = factory.createText();
 //        drawing = factory.createDrawing();
-        propertiesText = factory.createRPr();
-        color = factory.createColor();
+//        propertiesText = factory.createRPr();
+//        color = factory.createColor();
     }
 
     protected void saveDocument(String name) {
@@ -109,8 +120,9 @@ public class DocumentCreator {
         File file = new File(path + name + ".docx");
         try {
             word.save(file);
+            log.info("Saved successfully");
         } catch (Docx4JException e) {
-            throw new RuntimeException(e);
+            log.error(e.getLocalizedMessage());
         }
     }
 
@@ -125,40 +137,17 @@ public class DocumentCreator {
         wrapper.getContent().add(text);
         paragraph.getContent().add(wrapper);
         document.getContent().add(paragraph);
-    }
-
-    private Inline createImg(String source) throws Exception {
-            URL url = new URL(source);
-            InputStream is = url.openStream();
-            ByteArrayOutputStream bus = new ByteArrayOutputStream();
-            int readed;
-            byte[] data = new byte[33554432]; // 32mb
-
-            while ((readed = is.read(data, 0, data.length)) != -1) {
-                bus.write(data, 0, readed);
-            }
-
-            data = bus.toByteArray();
-
-            BinaryPartAbstractImage imagePart = BinaryPartAbstractImage.createImagePart(word, data);
-            log.info("url.getFile() " + url.getFile());
-            log.info("url.getQuery() " + url.getQuery());
-            log.info("url.getPath() " + url.getPath());
-            Inline image = imagePart
-                    .createImageInline(url.getFile(), url.getFile(), id1, id2, false, 10000); //TODO всё уникальное
-            id1 += 2;
-            id2 += 2;
-
-            return image;
+        log.info("paragraphs count " + ++count);
     }
 
     protected void addImgParagraph(String source) {
-        Inline image = null;
+        Inline image;
 
         try {
             image = createImg(source);
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
+            return;
         }
 
         ObjectFactory factory = Context.getWmlObjectFactory();
@@ -167,8 +156,57 @@ public class DocumentCreator {
         R wrapper = factory.createR();
         Drawing drawing = factory.createDrawing();
 
-        drawing.getAnchorOrInline().add(image);
+        drawing.getAnchorOrInline().add(image); //TODO: все списки трим-ту-сайзнуть
         wrapper.getContent().add(drawing);
+        paragraph.getContent().add(wrapper);
+        document.getContent().add(paragraph);
+        log.info("paragraphs count " + ++count);
+    }
+
+    private Inline createImg(String source) throws Exception {
+        URL url = new URL(source);
+        InputStream is = url.openStream();
+        ByteArrayOutputStream bus = new ByteArrayOutputStream();
+        int readed;
+        byte[] data = new byte[33554432]; // 32mb
+
+        while ((readed = is.read(data, 0, data.length)) != -1) {
+            bus.write(data, 0, readed);
+        }
+
+        data = bus.toByteArray();
+
+        BinaryPartAbstractImage imagePart = BinaryPartAbstractImage.createImagePart(word, data);
+        Inline image = imagePart
+                .createImageInline(String.valueOf(id1), url.toString(), id1, id2, false, 10000);
+        id1 += 2;
+        id2 += 2;
+
+        return image;
+    }
+
+    protected void addChapterName(String name) {
+        ObjectFactory factory = Context.getWmlObjectFactory();
+        P paragraph = factory.createP();
+        paragraph.setPPr(chapterProperties);
+        R wrapper = factory.createR();
+        Text text = factory.createText();
+
+        text.setValue(name);
+        wrapper.getContent().add(text);
+        paragraph.getContent().add(wrapper);
+        document.getContent().add(paragraph);
+    }
+
+    protected void addPageBreak() {
+        ObjectFactory factory = Context.getWmlObjectFactory();
+        P paragraph = factory.createP();
+        paragraph.setPPr(paragraphProperties);
+        R wrapper = factory.createR();
+        Br br = factory.createBr();
+        br.setType(STBrType.PAGE);
+
+        wrapper.getContent().add(br);
         paragraph.getContent().add(wrapper);
         document.getContent().add(paragraph);
     }

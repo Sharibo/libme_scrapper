@@ -89,3 +89,14 @@
 //                log.warn(element.getTagName());
 //        }
 //    }
+
+//        Pattern[] patterns = {
+//                Pattern.compile("\\s\\s"),              // doubleSpace
+//                Pattern.compile("\\.\\S"),              // dot
+//                Pattern.compile("\\S[-–—]\\S"),         // dash1
+//                Pattern.compile("\\S[-–—]\\s"),         // dash2
+//                Pattern.compile("[-–—]\\S"),            // dash3
+//                Pattern.compile("[-–]"),                // dash4
+//                Pattern.compile("\\.[\"”»]"),           // quotes1
+//                Pattern.compile("\\.\\.[\"”»]\\.")      // quotes2
+//        };
