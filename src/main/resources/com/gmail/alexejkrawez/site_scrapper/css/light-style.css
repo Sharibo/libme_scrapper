@@ -12,6 +12,13 @@
     src: url('../fonts/RobotoCondensed-Light.ttf') format('truetype');
 }
 
+/*TODO переделать*/
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
 .root {
     -fx-font-family: 'Roboto-Bold', 'sans-serif';
     -fx-font-size: 1em;

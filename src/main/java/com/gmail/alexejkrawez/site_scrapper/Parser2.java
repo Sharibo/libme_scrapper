@@ -2,6 +2,38 @@
 //
 //public class Parser2 {
 
+
+//https://stackoverflow.com/questions/32389447/javafx-tableview-row-selection
+//https://www.jenkov.com/tutorials/javafx/tableview.html#hide-columns
+//create a browser
+//        EdgeOptions options = new EdgeOptions();
+//        options.addArguments("window-size=1920x1080"); //not working?
+//                options.addArguments("--headless=new");
+//                options.addArguments("--start-maximized");
+//        options.setExperimentalOption("useAutomationExtension", false);
+//        options.addArguments("--disable-blink-features=AutomationControlled");
+//                EdgeDriver driver = new EdgeDriver(options);
+//        driver.manage().window().maximize();
+//        EdgeDriver driver = new EdgeDriver();
+
+                //get url from TextField
+//                driver.navigate().to(url);
+
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+//        WebElement element = wait
+//                .until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(CHAPTER_TITLE))));
+
+                //get table of contents
+//                List<Chapter> tableOfContents = getTableOfContents(driver);
+//        driver.quit();
+
+//        driver.close();
+//        driver.switchTo().newWindow(WindowType.TAB);
+//        driver.navigate().to(tableOfContents.get(tableOfContents.size() - 1).getChapterLink());
+//        List<WebElement> data = driver.findElements(By.xpath(CHAPTER_CONTAINER));
+//        data.forEach(e -> log.info(e.getText() + "\n"));
+
+
 //        List<WebElement> menu__item = wait
 //                .until(ExpectedConditions.visibilityOfAllElements(driver.findElements(By.className("menu__item"))));
 

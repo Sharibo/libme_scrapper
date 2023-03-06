@@ -10,7 +10,7 @@
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-
+<?import javafx.scene.control.TableView?>
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:id="anchorPane"
@@ -27,8 +27,8 @@
 
         <TextField fx:id="addLink"
                    alignment="CENTER"
-                   minWidth="96.0"
-                   maxWidth="150.0"
+                   minWidth="250.0"
+                   maxWidth="350.0"
                    minHeight="28.0"
                    maxHeight="28.0"
                    promptText="Add ranobelib.me link here"
@@ -78,12 +78,29 @@
 
     </HBox>
 
+    <TableView fx:id="listView2"
+               AnchorPane.topAnchor="32.0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               AnchorPane.bottomAnchor="24.0">
 
+    </TableView>
 <!--    <ListView fx:id="listView"-->
 <!--              AnchorPane.topAnchor="32.0"-->
 <!--              AnchorPane.leftAnchor="0"-->
 <!--              AnchorPane.rightAnchor="0"-->
 <!--              AnchorPane.bottomAnchor="24.0">-->
+<!--        <CheckBoxListCell fx:id="listCheckBox"-->
+<!--        minWidth="20">-->
+<!--        </CheckBoxListCell>-->
+
+<!--        <TextFieldListCell fx:id="listText"-->
+<!--        minWidth="100">-->
+<!--        </TextFieldListCell>-->
+
+<!--        <TextFieldListCell fx:id="listUrl"-->
+<!--        minWidth="50">-->
+<!--        </TextFieldListCell>-->
 <!--    </ListView>-->
 
 
@@ -111,10 +128,10 @@
                 maxWidth="20.0"
                 minHeight="20.0"
                 maxHeight="20.0"
-                onAction="#buttonAddLink">
-<!--            <graphic>-->
-<!--                <FontIcon fx:id="themeChangerIcon" iconLiteral="fltfmz-weather-moon-20" iconSize="20"/>-->
-<!--            </graphic>-->
+                onAction="#buttonGetTableOfContents">
+            <graphic>
+                <FontIcon fx:id="themeChangerIcon" iconLiteral="fltfmz-weather-moon-20" iconSize="20"/>
+            </graphic>
         </Button>
 
     </AnchorPane>

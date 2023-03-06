@@ -27,56 +27,94 @@ public class Parser {
     private static DocumentCreator documentCreator;
     private static String title;
 
-//    private static final String CHAPTERS = "/html/body/div[3]/div/div/div/div[2]/div[2]/div[3]/div/div[2]/div[1]/div[1]/div";
-//    private static final String FOOTER = "footer__nav-link";
-//    private static final String CHAPTERS = "vue-recycle-scroller__item-view";
-//    private static final String LINK = "div/div[2]/div[1]/a";
-//    private static final String LINK = "div/div[2]/div[1]/a";
-
-    //    private static final String CHAPTER_TITLE = "//div[@data-reader-modal='chapters']";
     private static final String CHAPTERS_GETTER = "//div[@data-reader-modal='chapters']";
     private static final String CHAPTERS = "menu__item";
-    private static final String NEXT_CHAPTERS_LINK = ".vue-recycle-scroller__item-view";
-    //    private static final String CHAPTER_CONTAINER = "div[@class='reader-container container container_center']";
     private static final String CHAPTER_CONTAINER = "div.reader-container.container.container_center";
 //    private static final String REGEXP = "--““А-а?Я не —могу- ‘поверить, что \"папа.\" это забыл!“- раздался' -–с \"кухни—- выкрик Тули.Насколько –я\u00A0 помню,папа ““попросил приготовь““  ““это““ \u00A0  для меня,    мне  оно  понадобится        на работе...”,отчего мама выглядела раздражённой,так как была всегда очень занята по утрам?а он не предупредил её заранее.";
+    private static final String[][] PATTERNS = {
+        // doubleSpace
+        {"[\\u00A0\\s]{2,}", " "},
+        // dash 1
+        {"[\\u00A0\\s][-–—]{1,2}([^\\u00A0\\s])", " —\u00A0$1"},
+        // dash 2
+        {"([^\\u00A0\\s])[-–—]{1,2}[\\u00A0\\s]", "$1 —\u00A0"},
+        // dash 3
+        {"^[-–—]{1,2}([^\\u00A0\\s])", "—\u00A0$1"},
+        // dot, question mark, exclamation mark, comma, semicolon with symbol
+        {"([\\.,\\?!;])([^\\u00A0\\s\\.,\\?!\"'‚‘‛’‟„“”‹›«»「」『』(){}\\[\\]])", "$1 $2"},
+        // quotes and dots 1
+        {"\\.([\"'‚‘‛’‟„“”‹›«»「」『』〈〉《》(){}\\[\\]])", "$1."},
+        // quotes and dots 2
+        {"\\.\\.([\"'‚‘‛’‟„“”‹›«»「」『』〈〉《》(){}\\[\\]])\\.", "...$1"},
+        // little spruces 1
+        {"[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]([^\\u00A0\\s])", "«$1"},  // 「」『』〈〉《》 сомнительно
+        // little spruces 2
+        {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]", "$1»"},
+        // little spruces 3
+        {"[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}([^\\u00A0\\s])", "««$1"},
+        // little spruces 4
+        {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}", "$1»»"},
+    };
 
 
-    protected static void getData(String url) {
+    protected static List<Chapter> getTableOfContents(String url) {
+//        // create a browser
+//        EdgeOptions options = new EdgeOptions();
+//        options.addArguments("--headless=new");
+//        options.addArguments("--start-maximized");
+//        EdgeDriver driver = new EdgeDriver(options);
+//
+//        // get url from TextField
+//        driver.navigate().to(url);
+//
+//        // get table of contents
+//        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
+//        new Actions(driver).moveToElement(chaptersGetter).click().perform();
+//        List<WebElement> chaptersList = driver.findElements(By.className(CHAPTERS));
+//        List<Chapter> tableOfContents = new ArrayList<>(chaptersList.size());
+//        chaptersList.forEach(element ->
+//                tableOfContents.add(new Chapter(element.getText(), element.getAttribute("href")))
+//        );
+//        Collections.reverse(tableOfContents);
+//
+//        log.info("Table of content downloaded successfully");
+//        driver.quit();
+        List<Chapter> tableOfContents = new ArrayList<>();
+        tableOfContents.add(new Chapter("Том 1 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 2 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 3 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 4 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 5 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 6 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 7 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 8 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 9 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 10 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 11 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 12 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 13 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 14 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        return tableOfContents;
+    }
 
-//        documentCreator.addTextParagraph("VALERA!^p Помоги, \nпожажа. . .");
-//        documentCreator.addImgParagraph("https://ranobelib.me/uploads/ranobe/ascendance-of-a-bookworm-novel/chapters/1795657/a674b50a-1ef1-4a92-8df7-9ed4f17981c3_R198.jpg");
-//        documentCreator.addImgParagraph("https://cover.imglib.info/uploads/cover/ascendance-of-a-bookworm-novel/cover/SyZ8gnRS2bI5_250x350.jpg");
-//        documentCreator.saveDocument("456");
-        //create a browser
-        EdgeOptions options = new EdgeOptions();
-//        options.addArguments("window-size=1920x1080"); //not working?
-        options.addArguments("--headless=new");
-        options.addArguments("--start-maximized");
-//        options.setExperimentalOption("useAutomationExtension", false);
-//        options.addArguments("--disable-blink-features=AutomationControlled");
-        EdgeDriver driver = new EdgeDriver(options);
-//        driver.manage().window().maximize();
-//        EdgeDriver driver = new EdgeDriver();
+//    private static List<Chapter> getTableOfContents(EdgeDriver driver) {
+//        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
+//        new Actions(driver).moveToElement(chaptersGetter).click().perform();
+//        List<WebElement> chaptersList = driver.findElements(By.className(CHAPTERS));
+//        List<Chapter> chaptersLinks = new ArrayList<>(chaptersList.size());
+//        chaptersList.forEach(element ->
+//                chaptersLinks.add(new Chapter(element.getText(), element.getAttribute("href")))
+//        );
+//        Collections.reverse(chaptersLinks);
+//        log.info("Table of content downloaded successfully");
+//        return chaptersLinks;
+//    }
 
-        //get url from TextField
-        driver.navigate().to(url);
+    // to index is included
+    protected static void getData(int from, int to, List<Chapter> tableOfContents) {
+//        List<Chapter> tableOfContents = getTableOfContents(url);
 
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-//        WebElement element = wait
-//                .until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(CHAPTER_TITLE))));
-
-        //get table of contents
-        List<Chapter> tableOfContents = getTableOfContents(driver);
-        driver.quit();
-
-//        driver.close();
-//        driver.switchTo().newWindow(WindowType.TAB);
-//        driver.navigate().to(tableOfContents.get(tableOfContents.size() - 1).getChapterLink());
-//        List<WebElement> data = driver.findElements(By.xpath(CHAPTER_CONTAINER));
-//        data.forEach(e -> log.info(e.getText() + "\n"));
-
-        //get chapters
+        // get chapters
         title = getTitleName(tableOfContents.get(0).getChapterLink());
         documentCreator = new DocumentCreator();
         documentCreator.createDocument(title);
@@ -85,20 +123,6 @@ public class Parser {
 
         // save document
         documentCreator.saveDocument(title);
-    }
-
-
-    private static List<Chapter> getTableOfContents(EdgeDriver driver) {
-        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
-        new Actions(driver).moveToElement(chaptersGetter).click().perform();
-        List<WebElement> chaptersList = driver.findElements(By.className(CHAPTERS));
-        List<Chapter> chaptersLinks = new ArrayList<>(chaptersList.size());
-        chaptersList.forEach(element ->
-                chaptersLinks.add(new Chapter(element.getText(), element.getAttribute("href")))
-        );
-        Collections.reverse(chaptersLinks);
-        log.info("Table of content downloaded successfully");
-        return chaptersLinks;
     }
 
 
@@ -155,6 +179,20 @@ public class Parser {
         }
     }
 
+    private static String checkSpelling(String text) {
+        String trimmedText = text.strip();
+
+        if (trimmedText.contains("http")) {
+            return trimmedText;
+        }
+
+        for (String[] pattern : PATTERNS) {
+            trimmedText = trimmedText.replaceAll(pattern[0], pattern[1]); //TODO всё же попытаться на стрингбилдер переписать
+        }
+
+        return trimmedText;
+    }
+
     private static String getTitleName(String url) {
         Pattern p = Pattern.compile("ranobelib.me/([A-Za-z0-9-]+)/");
         Matcher m = p.matcher(url);
@@ -168,45 +206,6 @@ public class Parser {
             log.error("Title name not found in url: " + url);
             return "Unknown";
         }
-    }
-    
-    private static String checkSpelling(String text) {
-        String trimmedText = text.strip();
-
-        if (trimmedText.contains("http")) {
-            return trimmedText;
-        }
-
-        String[][] patterns = {
-                // doubleSpace
-                {"[\\u00A0\\s]{2,}", " "},
-                // dash 1
-                {"[\\u00A0\\s][-–—]{1,2}([^\\u00A0\\s])", " —\u00A0$1"},
-                // dash 2
-                {"([^\\u00A0\\s])[-–—]{1,2}[\\u00A0\\s]", "$1 —\u00A0"},
-                // dash 3
-                {"^[-–—]{1,2}([^\\u00A0\\s])", "—\u00A0$1"},
-                // dot, question mark, exclamation mark, comma, semicolon with symbol
-                {"([\\.,\\?!;])([^\\u00A0\\s\\.,\\?!\"'‚‘‛’‟„“”‹›«»「」『』(){}\\[\\]])", "$1 $2"},
-                // quotes and dots 1
-                {"\\.([\"'‚‘‛’‟„“”‹›«»「」『』〈〉《》(){}\\[\\]])", "$1."},
-                // quotes and dots 2
-                {"\\.\\.([\"'‚‘‛’‟„“”‹›«»「」『』〈〉《》(){}\\[\\]])\\.", "...$1"},
-                // little spruces 1
-                {"[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]([^\\u00A0\\s])", "«$1"},  // 「」『』〈〉《》 сомнительно
-                // little spruces 2
-                {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]", "$1»"},
-                // little spruces 3
-                {"[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}([^\\u00A0\\s])", "««$1"},
-                // little spruces 4
-                {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}", "$1»»"},
-        };
-
-        for (String[] pattern : patterns) {
-            trimmedText = trimmedText.replaceAll(pattern[0], pattern[1]);
-        }
-
-        return trimmedText;
     }
 
     //TODO: поиск ссылки на следующую главу или всё -

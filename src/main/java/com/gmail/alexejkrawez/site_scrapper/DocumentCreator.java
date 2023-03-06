@@ -31,12 +31,15 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class DocumentCreator {
 
-    private static final Logger log = LoggerFactory.getLogger(DocumentCreator.class);
+    private static final Logger log = getLogger(DocumentCreator.class);
     private static WordprocessingMLPackage word;
     private static Parts parts;
     private static MainDocumentPart document;
+    private static ObjectFactory factory = Context.getWmlObjectFactory();
     private static FontTablePart fonts;
     private static StyleDefinitionsPart styles;
     private static P paragraph;
@@ -85,7 +88,6 @@ public class DocumentCreator {
         document = word.getMainDocumentPart();
         document.addStyledParagraphOfText("Title", title);
 
-        ObjectFactory factory = Context.getWmlObjectFactory();
         // mainDocumentPart > paragraph + paragraphProperties > wrapper > text + drawing + (propertiesText > color + B + I + U + caps)
 
         paragraphProperties = factory.createPPr();
@@ -127,7 +129,6 @@ public class DocumentCreator {
     }
 
     protected void addTextParagraph(String source) {
-        ObjectFactory factory = Context.getWmlObjectFactory();
         P paragraph = factory.createP();
         paragraph.setPPr(paragraphProperties);
         R wrapper = factory.createR();
@@ -150,7 +151,6 @@ public class DocumentCreator {
             return;
         }
 
-        ObjectFactory factory = Context.getWmlObjectFactory();
         P paragraph = factory.createP();
         paragraph.setPPr(paragraphImageProperties);
         R wrapper = factory.createR();
@@ -186,7 +186,6 @@ public class DocumentCreator {
     }
 
     protected void addChapterName(String name) {
-        ObjectFactory factory = Context.getWmlObjectFactory();
         P paragraph = factory.createP();
         paragraph.setPPr(chapterProperties);
         R wrapper = factory.createR();
@@ -199,7 +198,6 @@ public class DocumentCreator {
     }
 
     protected void addPageBreak() {
-        ObjectFactory factory = Context.getWmlObjectFactory();
         P paragraph = factory.createP();
         paragraph.setPPr(paragraphProperties);
         R wrapper = factory.createR();
