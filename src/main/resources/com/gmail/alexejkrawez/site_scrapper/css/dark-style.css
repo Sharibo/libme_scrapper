@@ -46,7 +46,7 @@
 #moveSelectedUpIcon {
     -fx-fill: #a0a0a0;
 }
-#moveSelectedUp:hover #moveSelectedUpIcon {
+#getTableOfContents:hover #moveSelectedUpIcon {
     -fx-fill: #59a4ff;
 }
 #moveSelectedUpIcon:disabled {
@@ -193,13 +193,13 @@
     -fx-label-padding: 0 0 0 8;
 }
 
-#themeChanger:hover {
+#themeChangerButton:hover {
     -fx-border-color: transparent;
     -fx-border-radius: 0px;
 }
 #themeChangerIcon {
     -fx-fill: #facc16;
 }
-#themeChanger:hover #themeChangerIcon {
+#themeChangerButton:hover #themeChangerIcon {
     -fx-fill: white;
 }

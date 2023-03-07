@@ -9,13 +9,13 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Hyperlink;
 
 
-public class ListViewRow {
+public class TableRow {
     private final SimpleBooleanProperty checkbox = new SimpleBooleanProperty();
     private final SimpleStringProperty name = new SimpleStringProperty();
     private final ObjectProperty<Hyperlink> url = new SimpleObjectProperty<>();
 
 
-    public ListViewRow(boolean checkbox, String name, Hyperlink url) {
+    public TableRow(boolean checkbox, String name, Hyperlink url) {
         this.checkbox.set(checkbox);
         this.name.set(name);
         this.url.set(url);

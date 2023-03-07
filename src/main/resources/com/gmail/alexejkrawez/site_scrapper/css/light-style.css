@@ -29,7 +29,7 @@
 
 .button {
     -fx-border-radius: 0px;
-    -fx-background-color: black;
+    -fx-background-color: white;
     -fx-padding: 0px;
 }
 
@@ -50,7 +50,7 @@
 }
 
 
-#moveSelectedUp:hover #moveSelectedUpIcon {
+#getTableOfContents:hover #getTableOfContentsIcon {
     -fx-fill: #167efa;
 }
 
@@ -170,13 +170,13 @@
     -fx-label-padding: 0 0 0 8;
 }
 
-#themeChanger:hover {
+#themeChangerButton:hover {
     -fx-border-color: transparent;
     -fx-border-radius: 0px;
 }
 #themeChangerIcon {
     -fx-fill: #167efa;
 }
-#themeChanger:hover #themeChangerIcon {
+#themeChangerButton:hover #themeChangerIcon {
     -fx-fill: black;
 }
