@@ -12,12 +12,10 @@
     src: url('../fonts/RobotoCondensed-Light.ttf') format('truetype');
 }
 
-/*TODO переделать*/
-.noheader .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
-}
+/** {*/
+/*    -fx-lightskyblue: lightskyblue;*/
+/*    -fx-blue: #167efa;*/
+/*}*/
 
 .root {
     -fx-font-family: 'Roboto-Bold', 'sans-serif';
@@ -39,42 +37,41 @@
 }
 
 
-#addFileIcon {
-    -fx-fill: #3E932AFF;
+/*.persistent-prompt:focused {*/
+/*    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);*/
+/*}*/
+/*.no-prompt {*/
+/*    -fx-prompt-text-fill: transparent;*/
+/*}*/
+
+.text-field {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-radius: 3px;
+    -fx-border-width: 1;
+    -fx-border-color: #167efa;
+    -fx-background-radius: 3px;
+    -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
 }
-#addLink:hover #addFileIcon {
-    -fx-fill: #42b028;
-}
-#addLink:hover {
-    -fx-underline: true;
+
+.text-field:focused {
+    -fx-font-weight: bold;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 
-#getTableOfContents:hover #getTableOfContentsIcon {
+#getTableOfContentsButton:hover {
+    -fx-border-color: transparent;
+    -fx-border-radius: 0px;
+}
+#getTableOfContentsIcon {
     -fx-fill: #167efa;
 }
-
-#moveSelectedDownIcon {
-    -fx-rotate: 180;
-}
-#moveSelectedDown:hover #moveSelectedDownIcon {
-    -fx-fill: #167efa;
+#getTableOfContentsButton:hover #getTableOfContentsIcon {
+    -fx-fill: black;
 }
 
-
-#removeSelected:hover {
-    -fx-border-color: lightcoral;
-}
-#removeSelected:hover #removeSelectedIcon {
-    -fx-fill: firebrick;
-}
-
-#removeAll:hover {
-    -fx-border-color: lightcoral;
-}
-#removeAll:hover #removeAllIcon {
-    -fx-fill: firebrick;
-}
 
 
 #mergeFilesIcon {
@@ -88,35 +85,90 @@
 }
 
 
-.list-view {
-    -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
-    -fx-font-weight: normal;
+/* tableView */
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
 }
 
-#listView {
+#table-view {
+    -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
+    -fx-font-weight: bold;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-border-color: black;
     -fx-border-width: 2 0 2 0;
 }
 
-.list-cell {
+.table-row-cell {
+    -fx-cell-size: 22px;
     -fx-background-color: white;
+    -fx-alignment: BOTTOM_CENTER;
 }
 
-.list-cell:filled:selected:focused, .list-cell:filled:selected {
+.table-row-cell:filled:selected:focused, .table-row-cell:filled:selected {
     -fx-background-color: #589d47;
     -fx-text-fill: white;
 }
 
-.list-cell:filled:hover {
+.table-row-cell:filled:selected:focused, .table-row-cell:filled:selected .hyperlink {
+    -fx-background-color: #589d47;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:filled:hover {
     -fx-background-color: #87b77b;
     -fx-text-fill: white;
 }
 
+.table-row-cell:filled:hover .hyperlink {
+    -fx-background-color: #87b77b;
+    -fx-text-fill: white;
+}
 
-.list-view > .virtual-flow > .corner {
+.table-view > .virtual-flow > .corner {
     -fx-background-color: #dcdcdc;
+}
+
+
+.check-box {
+    selected-box-color: white;
+    box-color: white;
+    mark-color: #167efa;
+}
+
+.check-box > .box {
+    -fx-alignment: CENTER;
+    -fx-padding: 0.17em 0.17em 0.17em 0.17em;
+    -fx-border-color: #589d47;
+    -fx-border-radius: 3px;
+}
+
+.check-box:selected > .box {
+    /* background color for selected checkbox */
+    -fx-background-color: selected-box-color;
+}
+
+.check-box > .box {
+    /* background color of unselected checkbox */
+    -fx-background-color: box-color;
+}
+
+.check-box:selected > .box > .mark,
+.check-box:indeterminate  > .box > .mark {
+    -fx-background-color: mark-color;
+}
+
+#name-column {
+}
+
+.hyperlink {
+    -fx-padding: 0 0 0 0;
+}
+
+#url-column {
+    -fx-text-alignment: center;
 }
 
 .scroll-bar:horizontal .track,
@@ -177,6 +229,7 @@
 #themeChangerIcon {
     -fx-fill: #167efa;
 }
+
 #themeChangerButton:hover #themeChangerIcon {
     -fx-fill: black;
 }

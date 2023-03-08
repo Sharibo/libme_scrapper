@@ -3,6 +3,7 @@ package com.gmail.alexejkrawez.site_scrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -10,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.TextAlignment;
 import org.slf4j.Logger;
 
 import java.awt.*;
@@ -23,18 +25,26 @@ public class ControllerHelper {
     private static final Logger log = getLogger(ControllerHelper.class);
 
     protected static void initializeTableView(TableView<TableRow> tableView, Label footerLabel) {
-        tableView.getStyleClass().add("noheader"); // TODO переделать
+        tableView.setId("table-view");
+        tableView.getStyleClass().add("noheader");
         tableView.setEditable(true);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<TableRow, Boolean> checkboxColumn = new TableColumn<>("First Name"); //TODO переименовать
         checkboxColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
         checkboxColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
+        checkboxColumn.setMinWidth(32.0);
+        checkboxColumn.setMaxWidth(32.0);
 
         TableColumn<TableRow, String> nameColumn = new TableColumn<>("Two Name");  //TODO переименовать
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setId("name-column");
 
         TableColumn<TableRow, Hyperlink> urlColumn = new TableColumn<>("First Name");  //TODO переименовать
         urlColumn.setCellValueFactory(new PropertyValueFactory<>("url"));
+        urlColumn.setId("url-column");
+        urlColumn.setMinWidth(48.0);
+        urlColumn.setMaxWidth(48.0);
 
         tableView.getColumns().add(checkboxColumn);
         tableView.getColumns().add(nameColumn);
@@ -63,8 +73,9 @@ public class ControllerHelper {
 
             for (Chapter chapter : tableOfContents) {
                 Hyperlink url = new Hyperlink(chapter.getChapterLink());
-                url.setText("New link text");
+                url.setText("url \u2B0F"); // TODO придумать что писать
                 url.setOnAction(e -> {
+                    url.setVisited(false);
                     Desktop desktop = Desktop.getDesktop();
                     try {
                         desktop.browse(java.net.URI.create(chapter.getChapterLink()));

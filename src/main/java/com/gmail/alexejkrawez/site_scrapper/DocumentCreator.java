@@ -24,7 +24,6 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STBrType;
 import org.docx4j.wml.Text;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -87,7 +86,6 @@ public class DocumentCreator {
 //        parts.put(styles);
         document = word.getMainDocumentPart();
         document.addStyledParagraphOfText("Title", title);
-
         // mainDocumentPart > paragraph + paragraphProperties > wrapper > text + drawing + (propertiesText > color + B + I + U + caps)
 
         paragraphProperties = factory.createPPr();

@@ -12,7 +12,7 @@ import javafx.scene.control.Hyperlink;
 public class TableRow {
     private final SimpleBooleanProperty checkbox = new SimpleBooleanProperty();
     private final SimpleStringProperty name = new SimpleStringProperty();
-    private final ObjectProperty<Hyperlink> url = new SimpleObjectProperty<>();
+    private final ObjectProperty<Hyperlink> url = new SimpleObjectProperty<>(); //TODO убрать с конструктора и добавить стабильную строку
 
 
     public TableRow(boolean checkbox, String name, Hyperlink url) {

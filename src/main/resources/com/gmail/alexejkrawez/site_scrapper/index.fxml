@@ -23,16 +23,17 @@
           minHeight="32.0"
           maxHeight="32.0">
 
-        <TextField fx:id="addLink"
-
-                   minWidth="500.0"
-                   maxWidth="750.0"
+        <TextField fx:id="addLinkField"
+                   minWidth="-Infinity"
+                   maxWidth="Infinity"
                    minHeight="28.0"
                    maxHeight="28.0"
+                   HBox.hgrow="ALWAYS"
                    promptText="Add ranobelib.me link here"
+                   focusTraversable="false"
                    accessibleText="addLinkField">
             <HBox.margin>
-                <Insets right="32.0"
+                <Insets right="2.0"
                         left="2.0"
                         top="2.0"/>
             </HBox.margin>
@@ -46,23 +47,90 @@
                 minHeight="28.0"
                 maxHeight="28.0"
                 onAction="#getTableOfContents"
+                disable="false">
+            <HBox.margin>
+                <Insets top="2.0"/>
+            </HBox.margin>
+            <graphic>
+                <FontIcon fx:id="getTableOfContentsIcon" iconLiteral="fltral-apps-list-24" iconSize="24"/>
+            </graphic>
+        </Button>
+
+    </HBox>
+
+    <HBox fx:id="hBox2"
+          AnchorPane.topAnchor="32.0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          minHeight="32.0"
+          maxHeight="32.0">
+
+        <TextField fx:id="savePathField"
+                   minWidth="-Infinity"
+                   maxWidth="Infinity"
+                   minHeight="28.0"
+                   maxHeight="28.0"
+                   HBox.hgrow="ALWAYS"
+                   promptText="Add ranobelib.me link here"
+                   focusTraversable="false"
+                   accessibleText="addLinkField">
+            <HBox.margin>
+                <Insets right="2.0"
+                        left="2.0"
+                        top="2.0"/>
+            </HBox.margin>
+        </TextField>
+
+        <Button fx:id="saveToLocalButton"
+                alignment="CENTER"
+                contentDisplay="CENTER"
+                minWidth="28.0"
+                maxWidth="28.0"
+                minHeight="28.0"
+                maxHeight="28.0"
+                onAction="#saveToLocal"
                 disable="true">
             <HBox.margin>
                 <Insets top="2.0"/>
             </HBox.margin>
             <graphic>
-                <FontIcon fx:id="getTableOfContentsIcon" iconLiteral="fltral-arrow-up-circle-24" iconSize="24"/>
+                <FontIcon fx:id="saveToLocalIcon" iconLiteral="fltral-apps-list-24" iconSize="24"/>
+            </graphic>
+        </Button>
+
+    </HBox>
+
+    <HBox fx:id="hBox3"
+          AnchorPane.topAnchor="64.0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          minHeight="32.0"
+          maxHeight="32.0">
+
+        <Button fx:id="123"
+                alignment="CENTER"
+                contentDisplay="CENTER"
+                minWidth="28.0"
+                maxWidth="28.0"
+                minHeight="28.0"
+                maxHeight="28.0"
+                onAction="#getTableOfContents"
+                disable="false">
+            <HBox.margin>
+                <Insets top="2.0"/>
+            </HBox.margin>
+            <graphic>
+                <FontIcon fx:id="222" iconLiteral="fltral-apps-list-24" iconSize="24"/>
             </graphic>
         </Button>
 
     </HBox>
 
     <TableView fx:id="tableView"
-               AnchorPane.topAnchor="32.0"
+               AnchorPane.topAnchor="96.0"
                AnchorPane.leftAnchor="0"
                AnchorPane.rightAnchor="0"
                AnchorPane.bottomAnchor="24.0">
-
     </TableView>
 
     <AnchorPane fx:id="footer"

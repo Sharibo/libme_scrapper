@@ -1,10 +1,10 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -18,21 +18,13 @@ import static com.gmail.alexejkrawez.site_scrapper.ControllerHelper.*;
 public class Controller {
 
     @FXML
-    private TextField addLink;
+    private TextField addLinkField;
     @FXML
     private Button getTableOfContentsButton;
     //    @FXML
 //    private Button mergeFiles;
     @FXML
-    private ListView<TableRow> listView;
-    @FXML
     private TableView<TableRow> tableView;
-//    @FXML
-//    private CheckBoxListCell<CheckBox> listCheckBox;
-//    @FXML
-//    private TextFieldListCell<TextField> listText;
-//    @FXML
-//    private TextFieldListCell<TextField> listUrl;
     @FXML
     private Label footerLabel;
     @FXML
@@ -45,6 +37,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
+//        getTableOfContentsButton.setGraphic(new FontIcon());
 
         if (SiteScrapper.getTheme().equals("css/dark-style.css")) {
             themeChangerIcon.setIconLiteral("fltfmz-weather-sunny-20");
@@ -70,7 +63,7 @@ public class Controller {
 
     @FXML
     protected void getTableOfContents() {
-        String link = addLink.getText();
+        String link = addLinkField.getText();
         tableOfContents = Parser.getTableOfContents(link);
         showChapters(tableOfContents, tableView, footerLabel);
     }
@@ -173,6 +166,11 @@ public class Controller {
             SiteScrapper.setTheme("css/light-style.css");
             footerLabel.setText("Light theme enabled");
         }
+    }
+
+    @FXML
+    protected void saveToLocal() {
+
     }
 
 

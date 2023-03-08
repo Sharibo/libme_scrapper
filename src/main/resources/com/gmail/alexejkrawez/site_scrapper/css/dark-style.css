@@ -36,10 +36,10 @@
 #addFileIcon {
     -fx-fill: #3E932AFF;
 }
-#addLink:hover #addFileIcon {
+#addLinkField:hover #addFileIcon {
     -fx-fill: #42b028;
 }
-#addLink:hover {
+#addLinkField:hover {
     -fx-underline: true;
 }
 
