@@ -1,10 +1,14 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -21,8 +25,10 @@ public class Controller {
     private TextField addLinkField;
     @FXML
     private Button getTableOfContentsButton;
-    //    @FXML
-//    private Button mergeFiles;
+    @FXML
+    private Button saveToLocalButton;
+    @FXML
+    private CheckBox globalCheckbox;
     @FXML
     private TableView<TableRow> tableView;
     @FXML
@@ -45,6 +51,14 @@ public class Controller {
 
         initializeTableView(tableView, footerLabel);
 
+        // TODO вынести (глобальный чекбокс)
+        TableColumn<TableRow, ?> tableRowTableColumn = tableView.getColumns().get(0);
+        globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            for (TableRow item : tableView.getItems()) {
+                item.checkboxProperty().set(newValue);
+            }
+        });
+
 //        addListViewFooterLabelInfoEventListener();
 //        addListDragAndDropEventListener();
     }
@@ -66,6 +80,8 @@ public class Controller {
         String link = addLinkField.getText();
         tableOfContents = Parser.getTableOfContents(link);
         showChapters(tableOfContents, tableView, footerLabel);
+        saveToLocalButton.setDisable(false); // TODO вынести отдельно
+        globalCheckbox.setDisable(false);
     }
 
 //        Parser.getData("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
@@ -82,10 +98,19 @@ public class Controller {
     }
 
     @FXML
-    protected void moveSelectedUp() {
-//        buttonAddLink();
+    protected void saveToLocal() {
+
     }
 
+//    @FXML
+//    protected void checkAll() {
+//        TableColumn<TableRow, ?> tableRowTableColumn = tableView.getColumns().get(0);
+//        globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//            for (TableRow item : tableView.getItems()) {
+//                item.checkboxProperty().set(newValue);
+//            }
+//        });
+//    }
 
 //    @FXML
 //    protected void buttonMergeFiles() {
@@ -152,6 +177,11 @@ public class Controller {
 
 
     @FXML
+    protected void getAbout() {
+
+    }
+
+    @FXML
     protected void changeTheme() {
         Scene scene = themeChangerButton.getScene();
 
@@ -168,10 +198,6 @@ public class Controller {
         }
     }
 
-    @FXML
-    protected void saveToLocal() {
-
-    }
 
 
 //    private boolean isListViewReady() {

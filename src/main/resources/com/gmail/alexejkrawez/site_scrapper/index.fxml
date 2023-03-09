@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<?import javafx.scene.control.CheckBox?>
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:id="anchorPane"
@@ -29,27 +30,30 @@
                    minHeight="28.0"
                    maxHeight="28.0"
                    HBox.hgrow="ALWAYS"
-                   promptText="Add ranobelib.me link here"
+                   promptText="Вставьте ссылку с главой ranobelib.me"
                    focusTraversable="false"
                    accessibleText="addLinkField">
             <HBox.margin>
-                <Insets right="2.0"
-                        left="2.0"
-                        top="2.0"/>
+                <Insets top="2.0"
+                        right="2.0"
+                        left="2.0"/>
             </HBox.margin>
         </TextField>
 
         <Button fx:id="getTableOfContentsButton"
                 alignment="CENTER"
                 contentDisplay="CENTER"
-                minWidth="28.0"
-                maxWidth="28.0"
+                minWidth="150.0"
+                maxWidth="150.0"
                 minHeight="28.0"
                 maxHeight="28.0"
                 onAction="#getTableOfContents"
+                text="Загрузить оглавление"
+                wrapText="true"
                 disable="false">
             <HBox.margin>
-                <Insets top="2.0"/>
+                <Insets top="2.0"
+                        right="2.0"/>
             </HBox.margin>
             <graphic>
                 <FontIcon fx:id="getTableOfContentsIcon" iconLiteral="fltral-apps-list-24" iconSize="24"/>
@@ -71,27 +75,29 @@
                    minHeight="28.0"
                    maxHeight="28.0"
                    HBox.hgrow="ALWAYS"
-                   promptText="Add ranobelib.me link here"
+                   promptText="Путь для сохранения"
                    focusTraversable="false"
                    accessibleText="addLinkField">
             <HBox.margin>
-                <Insets right="2.0"
-                        left="2.0"
-                        top="2.0"/>
+                <Insets top="2.0"
+                        right="2.0"
+                        left="2.0"/>
             </HBox.margin>
         </TextField>
 
         <Button fx:id="saveToLocalButton"
                 alignment="CENTER"
                 contentDisplay="CENTER"
-                minWidth="28.0"
-                maxWidth="28.0"
+                minWidth="150.0"
+                maxWidth="150.0"
                 minHeight="28.0"
                 maxHeight="28.0"
                 onAction="#saveToLocal"
+                text="Сохранить в..."
                 disable="true">
             <HBox.margin>
-                <Insets top="2.0"/>
+                <Insets top="2.0"
+                        right="2.0"/>
             </HBox.margin>
             <graphic>
                 <FontIcon fx:id="saveToLocalIcon" iconLiteral="fltral-apps-list-24" iconSize="24"/>
@@ -106,6 +112,15 @@
           AnchorPane.rightAnchor="0"
           minHeight="32.0"
           maxHeight="32.0">
+
+        <CheckBox fx:id="globalCheckbox"
+                  disable="true">
+            <HBox.margin>
+                <Insets top="7.0"
+                        left="9.0"
+                        right="9.0"/>
+            </HBox.margin>
+        </CheckBox>
 
         <Button fx:id="123"
                 alignment="CENTER"
@@ -131,6 +146,9 @@
                AnchorPane.leftAnchor="0"
                AnchorPane.rightAnchor="0"
                AnchorPane.bottomAnchor="24.0">
+        <placeholder>
+            <Label text=""/>
+        </placeholder>
     </TableView>
 
     <AnchorPane fx:id="footer"
@@ -140,9 +158,24 @@
                 minHeight="24.0"
                 maxHeight="24.0">
 
+        <Button fx:id="aboutButton"
+                AnchorPane.bottomAnchor="2"
+                AnchorPane.leftAnchor="2"
+                alignment="CENTER"
+                contentDisplay="LEFT"
+                minWidth="20.0"
+                maxWidth="20.0"
+                minHeight="20.0"
+                maxHeight="20.0"
+                onAction="#getAbout">
+            <graphic>
+                <FontIcon fx:id="aboutIcon" iconLiteral="fltfmz-weather-moon-20" iconSize="20"/>
+            </graphic>
+        </Button>
+
         <Label fx:id="footerLabel"
                AnchorPane.bottomAnchor="0"
-               AnchorPane.leftAnchor="0"
+               AnchorPane.leftAnchor="22"
                AnchorPane.rightAnchor="24.0"
                minHeight="24.0"
                maxHeight="24.0"

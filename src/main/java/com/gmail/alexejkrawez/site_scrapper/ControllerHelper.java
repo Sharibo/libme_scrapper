@@ -3,15 +3,15 @@ package com.gmail.alexejkrawez.site_scrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.TextAlignment;
+import javafx.util.Callback;
 import org.slf4j.Logger;
 
 import java.awt.*;
@@ -23,6 +23,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ControllerHelper {
 
     private static final Logger log = getLogger(ControllerHelper.class);
+    private static boolean isChecked = false;
+    private static ObservableList<Integer> selectedIndices;
 
     protected static void initializeTableView(TableView<TableRow> tableView, Label footerLabel) {
         tableView.setId("table-view");
@@ -33,8 +35,68 @@ public class ControllerHelper {
         TableColumn<TableRow, Boolean> checkboxColumn = new TableColumn<>("First Name"); //TODO переименовать
         checkboxColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
         checkboxColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
+        checkboxColumn.setId("checkbox-column");
         checkboxColumn.setMinWidth(32.0);
         checkboxColumn.setMaxWidth(32.0);
+
+        checkboxColumn.setCellFactory(new Callback<TableColumn<TableRow, Boolean>, TableCell<TableRow, Boolean>>() {
+            @Override
+            public TableCell<TableRow, Boolean> call( TableColumn<TableRow, Boolean> param ) {
+                return new CheckBoxTableCell<TableRow, Boolean>() {
+                    @Override
+                    public void updateItem(Boolean checkbox, boolean empty) {
+                        if (!empty) {
+                            javafx.scene.control.TableRow<TableRow> row = getTableRow();
+
+                            if (row != null) {
+                                int rowNumber = row.getIndex();
+                                TableView.TableViewSelectionModel<TableRow> sm = getTableView().getSelectionModel();
+                                ObservableList<TableRow> items = tableView.getItems();
+                                ObservableList<Integer> selectedNowIndices = sm.getSelectedIndices();
+                                if (checkbox) {
+                                    sm.select(rowNumber);
+                                    for (int index : selectedNowIndices) {
+                                        items.get(index).checkboxProperty().set(row.getItem().isCheckbox());
+                                    }
+                                } else {
+                                    sm.clearSelection(rowNumber);
+                                    for (int index : selectedNowIndices) {
+                                        items.get(index).checkboxProperty().set(row.getItem().isCheckbox());
+                                    }
+                                }
+                            }
+                        }
+
+                        super.updateItem(checkbox, empty);
+                    }
+                };
+            }
+        } );
+
+//        checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
+//            @Override
+//            public ObservableValue<Boolean> call(Integer param) {
+//                TableView.TableViewSelectionModel<TableRow> selectionModel = tableView.getSelectionModel();
+//                ObservableList<Integer> selectedNowIndices = selectionModel.getSelectedIndices();
+//                ObservableList<TableRow> items = tableView.getItems();
+//                if (!selectedNowIndices.equals(selectedIndices)) {
+//                    isChecked = items.get(param).isCheckbox();
+//                    selectedIndices = selectedNowIndices;
+//                }
+//
+//                if (isChecked) {
+//                    for (int index : selectedIndices) {
+//                        items.get(index).checkboxProperty().set(true);
+//                    }
+//                } else {
+//                    for (int index : selectedIndices) {
+//                        items.get(index).checkboxProperty().set(false);
+//                    }
+//                }
+//
+//                return items.get(param).checkboxProperty();
+//            }
+//        }));
 
         TableColumn<TableRow, String> nameColumn = new TableColumn<>("Two Name");  //TODO переименовать
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -58,8 +120,14 @@ public class ControllerHelper {
             public void changed(ObservableValue<? extends TableRow> observable, TableRow oldValue, TableRow newValue) {
                 if(newValue != null) {
                     footerLabel.setText("Selected: " + newValue.getName());
-                    ObservableList<Integer> selectedIndices = selectionModel.getSelectedIndices();
+                    selectedIndices = selectionModel.getSelectedIndices();
                     log.info(selectedIndices.toString());
+
+
+//                    ObservableList<TableRow> items = tableView.getItems();
+//                    for (int index : selectedIndices) {
+//                        items.get(index).checkboxProperty().set(newValue);
+//                    }
                 }
             }
         });
@@ -83,6 +151,7 @@ public class ControllerHelper {
                         log.error("Error");
                     }
                 });
+
                 TableRow tableRow = new TableRow(false, chapter.getChapterName(), url);
 
                 tableView.getItems().add(tableRow);
