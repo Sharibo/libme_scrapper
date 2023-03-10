@@ -48,9 +48,7 @@
                 minHeight="28.0"
                 maxHeight="28.0"
                 onAction="#getTableOfContents"
-                text="Загрузить оглавление"
-                wrapText="true"
-                disable="false">
+                text="Загрузить оглавление">
             <HBox.margin>
                 <Insets top="2.0"
                         right="2.0"/>
@@ -76,7 +74,6 @@
                    maxHeight="28.0"
                    HBox.hgrow="ALWAYS"
                    promptText="Путь для сохранения"
-                   focusTraversable="false"
                    accessibleText="addLinkField">
             <HBox.margin>
                 <Insets top="2.0"
@@ -132,7 +129,8 @@
                 onAction="#getTableOfContents"
                 disable="false">
             <HBox.margin>
-                <Insets top="2.0"/>
+                <Insets top="2.0"
+                        right="2.0"/>
             </HBox.margin>
             <graphic>
                 <FontIcon fx:id="222" iconLiteral="fltral-apps-list-24" iconSize="24"/>
@@ -179,7 +177,7 @@
                AnchorPane.rightAnchor="24.0"
                minHeight="24.0"
                maxHeight="24.0"
-               text='Drop PDF-files in the box above or choose "Add files" button from the toolbar'/>
+               text=''/>
 
         <Button fx:id="themeChangerButton"
                 AnchorPane.bottomAnchor="2"
