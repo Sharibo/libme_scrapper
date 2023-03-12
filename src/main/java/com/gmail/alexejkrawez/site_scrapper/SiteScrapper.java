@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,8 +14,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class SiteScrapper extends Application {
 
+    private static final Logger log = getLogger(SiteScrapper.class);
     private static String lastOpenedDirectory = "user.home";
     private static String theme = "css/light-style.css";
 
@@ -47,7 +51,7 @@ public class SiteScrapper extends Application {
         final Properties properties = new Properties();
         double savedPosX = 300.0;
         double savedPosY = 300.0;
-        double savedWidth = 432.0;
+        double savedWidth = 450.0;
         double savedHeight = 160.0;
 
 
@@ -73,24 +77,23 @@ public class SiteScrapper extends Application {
         Scene scene = new Scene(fxmlLoader.load());
 
 
-        try (InputStream logoStream = getClass().getResourceAsStream("icons/logo.png")) {
+        try (InputStream logoStream = getClass().getResourceAsStream("icons/logo.png")) { // TODO другое лого
             Image logo = new Image(logoStream);
             stage.getIcons().add(logo);
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e.getLocalizedMessage());
         }
 
 
         scene.getStylesheets().add(getClass().getResource(theme).toExternalForm());
 
-        stage.setTitle("PDFMerger");
-        stage.setMinWidth(422.0);
-        stage.setMinHeight(170.0);
+        stage.setTitle("lib.me scrapper");
+        stage.setMinWidth(420.0);
+        stage.setMinHeight(230.0);
         stage.setWidth(savedWidth);
         stage.setHeight(savedHeight);
         stage.setX(savedPosX);
         stage.setY(savedPosY);
-        stage.setAlwaysOnTop(true);
 
         stage.setScene(scene);
         stage.show();
@@ -111,6 +114,7 @@ public class SiteScrapper extends Application {
                 e.printStackTrace();
             }
 
+            ControllerHelper.getHelpStage().close();
         });
 
     }

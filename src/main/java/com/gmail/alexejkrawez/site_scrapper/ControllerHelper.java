@@ -2,7 +2,11 @@ package com.gmail.alexejkrawez.site_scrapper;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -11,20 +15,35 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.InvalidPathException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ControllerHelper {
 
     private static final Logger log = getLogger(ControllerHelper.class);
-    private static boolean isChecked = false;
+    private static Stage helpStage = new Stage();
+    private static final ObservableList<TableRow> tableList = FXCollections.observableArrayList();
+    private static final ObservableList<TableRow> tableListReversed = FXCollections.observableArrayList();
+    private static boolean isReversed = false;
     private static ObservableList<Integer> selectedIndices;
+
+    public static Stage getHelpStage() {
+        return helpStage;
+    }
 
     protected static void initializeTableView(TableView<TableRow> tableView, Label footerLabel) {
         tableView.setId("table-view");
@@ -32,77 +51,26 @@ public class ControllerHelper {
         tableView.setEditable(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<TableRow, Boolean> checkboxColumn = new TableColumn<>("First Name"); //TODO переименовать
+        TableColumn<TableRow, Boolean> checkboxColumn = new TableColumn<>(); //TODO переименовать
         checkboxColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
-        checkboxColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
+        checkboxColumn.setCellFactory(new Callback<TableColumn<TableRow, Boolean>, TableCell<TableRow, Boolean>>() {
+            @Override
+            public TableCell<TableRow, Boolean> call( TableColumn<TableRow, Boolean> param ) {
+                CheckBoxTableCell<TableRow, Boolean> cell = new CheckBoxTableCell<TableRow, Boolean>();
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new CheckboxMouseClickEventHandler());
+                return cell;
+            }
+        } );
         checkboxColumn.setId("checkbox-column");
         checkboxColumn.setMinWidth(32.0);
         checkboxColumn.setMaxWidth(32.0);
 
-        checkboxColumn.setCellFactory(new Callback<TableColumn<TableRow, Boolean>, TableCell<TableRow, Boolean>>() {
-            @Override
-            public TableCell<TableRow, Boolean> call( TableColumn<TableRow, Boolean> param ) {
-                return new CheckBoxTableCell<TableRow, Boolean>() {
-                    @Override
-                    public void updateItem(Boolean checkbox, boolean empty) {
-                        if (!empty) {
-                            javafx.scene.control.TableRow<TableRow> row = getTableRow();
 
-                            if (row != null) {
-                                int rowNumber = row.getIndex();
-                                TableView.TableViewSelectionModel<TableRow> sm = getTableView().getSelectionModel();
-                                ObservableList<TableRow> items = tableView.getItems();
-                                ObservableList<Integer> selectedNowIndices = sm.getSelectedIndices();
-                                if (checkbox) {
-                                    sm.select(rowNumber);
-                                    for (int index : selectedNowIndices) {
-                                        items.get(index).checkboxProperty().set(row.getItem().isCheckbox());
-                                    }
-                                } else {
-                                    sm.clearSelection(rowNumber);
-                                    for (int index : selectedNowIndices) {
-                                        items.get(index).checkboxProperty().set(row.getItem().isCheckbox());
-                                    }
-                                }
-                            }
-                        }
-
-                        super.updateItem(checkbox, empty);
-                    }
-                };
-            }
-        } );
-
-//        checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
-//            @Override
-//            public ObservableValue<Boolean> call(Integer param) {
-//                TableView.TableViewSelectionModel<TableRow> selectionModel = tableView.getSelectionModel();
-//                ObservableList<Integer> selectedNowIndices = selectionModel.getSelectedIndices();
-//                ObservableList<TableRow> items = tableView.getItems();
-//                if (!selectedNowIndices.equals(selectedIndices)) {
-//                    isChecked = items.get(param).isCheckbox();
-//                    selectedIndices = selectedNowIndices;
-//                }
-//
-//                if (isChecked) {
-//                    for (int index : selectedIndices) {
-//                        items.get(index).checkboxProperty().set(true);
-//                    }
-//                } else {
-//                    for (int index : selectedIndices) {
-//                        items.get(index).checkboxProperty().set(false);
-//                    }
-//                }
-//
-//                return items.get(param).checkboxProperty();
-//            }
-//        }));
-
-        TableColumn<TableRow, String> nameColumn = new TableColumn<>("Two Name");  //TODO переименовать
+        TableColumn<TableRow, String> nameColumn = new TableColumn<>("Содержание");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         nameColumn.setId("name-column");
 
-        TableColumn<TableRow, Hyperlink> urlColumn = new TableColumn<>("First Name");  //TODO переименовать
+        TableColumn<TableRow, Hyperlink> urlColumn = new TableColumn<>();
         urlColumn.setCellValueFactory(new PropertyValueFactory<>("url"));
         urlColumn.setId("url-column");
         urlColumn.setMinWidth(48.0);
@@ -119,74 +87,147 @@ public class ControllerHelper {
             @Override
             public void changed(ObservableValue<? extends TableRow> observable, TableRow oldValue, TableRow newValue) {
                 if(newValue != null) {
-                    footerLabel.setText("Selected: " + newValue.getName());
                     selectedIndices = selectionModel.getSelectedIndices();
-                    log.info(selectedIndices.toString());
-
-
-//                    ObservableList<TableRow> items = tableView.getItems();
-//                    for (int index : selectedIndices) {
-//                        items.get(index).checkboxProperty().set(newValue);
-//                    }
                 }
             }
         });
+
+    }
+
+    static class CheckboxMouseClickEventHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent t) {
+            TableCell c = (TableCell) t.getSource();
+            int cellIndex = c.getIndex();
+            Boolean valueOld = (Boolean) c.itemProperty().get();
+            Boolean valueNew = tableList.get(cellIndex).isCheckbox();
+            if (valueOld != valueNew) {
+                ObservableList<TableRow> items = (ObservableList<TableRow>) c.getTableView().getItems();
+                if (selectedIndices != null && !selectedIndices.isEmpty()) {
+                    for (int index : selectedIndices) {
+                        items.get(index).checkboxProperty().set(valueNew);
+                    }
+                }
+                // TODO в футер "Отмечено глав: столько-то"
+            }
+        }
     }
 
     protected static void showChapters(List<Chapter> tableOfContents,
                                        TableView<TableRow> tableView,
-                                       Label footerLabel) { // TODO придумать что писать в футер
+                                       Label footerLabel) {
 
         if (tableOfContents != null && !tableOfContents.isEmpty()) {
 
             for (Chapter chapter : tableOfContents) {
                 Hyperlink url = new Hyperlink(chapter.getChapterLink());
-                url.setText("url \u2B0F"); // TODO придумать что писать
+                url.setText("url \u2B0F");
                 url.setOnAction(e -> {
                     url.setVisited(false);
                     Desktop desktop = Desktop.getDesktop();
                     try {
                         desktop.browse(java.net.URI.create(chapter.getChapterLink()));
                     } catch (IOException ex) {
-                        log.error("Error");
+                        log.error("Error by opening chapter-url");
                     }
                 });
 
                 TableRow tableRow = new TableRow(false, chapter.getChapterName(), url);
-
-                tableView.getItems().add(tableRow);
+                tableList.add(tableRow);
             }
 
+            tableListReversed.setAll(tableList);
+            FXCollections.reverse(tableListReversed);
 
+            tableView.getItems().setAll(tableList);
+            footerLabel.setText("Оглавление загружено. Всего глав: " + tableList.size());
+        }
 
-//            int size = 0;
-//            for (Chapter file : tableOfContents) {
-//                listView.getItems().add(file); // TODO переделать
-//                size++;
-//            }
-//
-//            if (size > 0) {
-//                if (size == 1) {
-//                    footerLabel.setText("Added 1 file"); // TODO переделать
-//                } else {
-//                    footerLabel.setText("Added " + size + " files");
-//                }
-//            }
+    }
 
-//            if (listView.getItems().size() == 1) {
-//                removeSelected.setDisable(false);
-//                removeAll.setDisable(false);
-//            } else if (listView.getItems().size() > 1) {
-//                setButtonsActive();
-//            }
+    protected static List<Chapter> getCheckedChapters(List<Chapter> tableOfContents) {
+        ArrayList<Chapter> chapters = new ArrayList<>();
 
+        for (int i = 0, size = tableList.size(); i < size; i++) {
+            if (tableList.get(i).isCheckbox()) {
+                chapters.add(tableOfContents.get(i));
+            }
+        }
+
+        return chapters;
+    }
+
+    protected static boolean checkUrl(String url, Label footerLabel) {
+        if (url.isBlank()) {
+            footerLabel.setText("URL-адрес не задан!");
+            return false;
+        }
+
+        Pattern p = Pattern.compile("^https://ranobelib.me/[A-Za-z0-9-]+/.*$");
+        Matcher m = p.matcher(url.strip());
+        if (m.find()) {
+            return true;
+        } else {
+            log.error("Url is not walid: " + url);
+            footerLabel.setText("Проверьте URL-адрес!");
+            return false;
+        }
+
+    }
+
+    protected static boolean checkPath(String pathToSave, Label footerLabel) {
+        if (pathToSave.isBlank()) {
+            footerLabel.setText("Путь для сохранения не задан!");
+            return false;
+        }
+
+        try {
+            java.nio.file.Paths.get(pathToSave);
+            return true;
+        } catch (InvalidPathException e) {
+            log.error(e.getLocalizedMessage());
+            footerLabel.setText("Проверьте путь для сохранения!");
+            return false;
         }
     }
 
+    protected static void reverseTable(TableView<TableRow> tableView, Label footerLabel) {
+        if (isReversed) {
+            tableView.getItems().setAll(tableList);
+            isReversed = false;
+            footerLabel.setText("Включен прямой порядок");
+        } else {
+            tableView.getItems().setAll(tableListReversed);
+            isReversed = true;
+            footerLabel.setText("Включен обратный порядок");
+        }
+    }
 
+    protected static void showHelpWindow() {
+        FXMLLoader fxmlLoader = new FXMLLoader(SiteScrapper.class.getResource("dialog.fxml"));
+        Scene scene = null;
 
+        try {
+            scene = new Scene(fxmlLoader.load());
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage());
+        }
 
+        try (InputStream logoStream = ControllerHelper.class.getResourceAsStream("icons/logo.png")) { // TODO другое лого
+            javafx.scene.image.Image logo = new Image(logoStream);
+            helpStage.getIcons().add(logo);
+        } catch (NullPointerException | IOException e) {
+            log.error(e.getLocalizedMessage());
+        }
 
+        scene.getStylesheets().add(ControllerHelper.class.getResource(SiteScrapper.getTheme()).toExternalForm());
 
+        helpStage.setTitle("Справка");
+        helpStage.setMinWidth(350.0);
+        helpStage.setMinHeight(400.0);
+
+        helpStage.setScene(scene);
+        helpStage.showAndWait();
+    }
 
 }

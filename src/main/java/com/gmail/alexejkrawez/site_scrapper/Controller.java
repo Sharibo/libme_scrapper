@@ -1,20 +1,19 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.List;
 
 import static com.gmail.alexejkrawez.site_scrapper.ControllerHelper.*;
@@ -26,9 +25,15 @@ public class Controller {
     @FXML
     private Button getTableOfContentsButton;
     @FXML
+    private TextField savePathField;
+    @FXML
+    private Button setLocalPathButton;
+    @FXML
     private Button saveToLocalButton;
     @FXML
     private CheckBox globalCheckbox;
+    @FXML
+    private Button reverseTableShowButton;
     @FXML
     private TableView<TableRow> tableView;
     @FXML
@@ -38,12 +43,13 @@ public class Controller {
     @FXML
     private FontIcon themeChangerIcon;
 
-    private static final Logger log = LoggerFactory.getLogger(Controller.class);
+    private static final Logger log = LoggerFactory.getLogger(Controller.class); // TODO если не нужен будет убрать
     private List<Chapter> tableOfContents;
 
     @FXML
     public void initialize() {
-//        getTableOfContentsButton.setGraphic(new FontIcon());
+
+        savePathField.setText(SiteScrapper.getLastOpenedDirectory());
 
         if (SiteScrapper.getTheme().equals("css/dark-style.css")) {
             themeChangerIcon.setIconLiteral("fltfmz-weather-sunny-20");
@@ -52,55 +58,92 @@ public class Controller {
         initializeTableView(tableView, footerLabel);
 
         // TODO вынести (глобальный чекбокс)
-        TableColumn<TableRow, ?> tableRowTableColumn = tableView.getColumns().get(0);
+//        TableColumn<TableRow, ?> tableRowTableColumn = tableView.getColumns().get(0);
         globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             for (TableRow item : tableView.getItems()) {
                 item.checkboxProperty().set(newValue);
             }
         });
 
-//        addListViewFooterLabelInfoEventListener();
-//        addListDragAndDropEventListener();
     }
 
     // TODO интерфейс
-    // TODO поле для ввода ссылки
-    // TODO поле ввода пути для сохранения + кнопка выбрать папку сохранения (запоминается в файлик настроек)
-    // TODO поле с таблицей / список глав + галочками + ссылкой на главу + на эскейт снятие галок со всех глав?
-    // TODO отметка всех глав / снятие выделения
-    // TODO отметка части глав
+    // TODO поле для ввода ссылки +
+    // TODO поле ввода пути для сохранения + кнопка выбрать папку сохранения (запоминается в файлик настроек) +
+    // TODO поле с таблицей / список глав + галочками + ссылкой на главу + на эскейт снятие галок со всех глав? +/-
+    // TODO отметка всех глав / снятие выделения +
+    // TODO отметка части глав +
     // TODO разбивать ли на тома с сохранением в отдельные файлы + возможно маска томов
     // TODO добавлять ли автора + можно перезаписать как зовут автора на кириллицу или что хочешь
-    // TODO поле футера
+    // TODO поле футера +
     // TODO хелп с указанием автора и версии программы
-    // TODO смена темы день/ночь
+    // TODO смена темы день/ночь +
 
     @FXML
     protected void getTableOfContents() {
+        getTableOfContentsButton.setDisable(true);
         String link = addLinkField.getText();
-        tableOfContents = Parser.getTableOfContents(link);
-        showChapters(tableOfContents, tableView, footerLabel);
-        saveToLocalButton.setDisable(false); // TODO вынести отдельно
-        globalCheckbox.setDisable(false);
+        if (checkUrl(link, footerLabel)) {
+            tableOfContents = Parser.getTableOfContents(link);
+//            tableOfContents = Parser.getTableOfContents("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
+            showChapters(tableOfContents, tableView, footerLabel);
+
+            getTableOfContentsButton.setDisable(false);
+            saveToLocalButton.setDisable(false); // TODO вынести отдельно
+            globalCheckbox.setDisable(false);
+            reverseTableShowButton.setDisable(false);
+        }
     }
 
-//        Parser.getData("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
-//        Parser.getData("https://ranobelib.me/quan-zhi-gao-shou-novel/v1/c0?bid=10511&ui=1709435"); //TODO: затычка
+    @FXML
+    public void setLocalPath() {
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        File lastOpenedDirectory = new File(SiteScrapper.getLastOpenedDirectory());
+        directoryChooser.setInitialDirectory(lastOpenedDirectory);
+        directoryChooser.setTitle("Выберите путь для сохранения");
 
+        Stage stage = (Stage) setLocalPathButton.getScene().getWindow();
+        File file = directoryChooser.showDialog(stage);
 
-    @FXML //TODO пока нет такой кнопки
-    protected void buttonDownloadChapters() {
-        // TODO извлечение выделения / галочек
+        if (file == null) {
+            return;
+        }
 
-        // TODO получение данных и сразу сохранение или после загрузки?
-        Parser.getData(1, 3, tableOfContents);
-        // TODO + сделать анимацию что такая-то глава загрузилась? Новый поток?
+        SiteScrapper.setLastOpenedDirectory(file.getAbsolutePath());
+        savePathField.setText(file.getAbsolutePath());
+        footerLabel.setText("Путь сохранения: " + file.getAbsolutePath());
     }
 
     @FXML
     protected void saveToLocal() {
+        // TODO блокировать кнопки
+        // TODO получение и проверка пути сохранения
+        String pathToSave = savePathField.getText();
 
+        if (checkPath(pathToSave, footerLabel)) {
+            // TODO извлечение выделения / галочек +/-
+            List<Chapter> checkedChapters = getCheckedChapters(tableOfContents);
+            // TODO получение данных +
+            Parser.getData(checkedChapters);
+            // TODO и сохранение
+            Parser.saveDocument(pathToSave, footerLabel);
+            // TODO + сделать анимацию что такая-то глава загрузилась? Новый поток?
+        }
+        // TODO разблокировать кнопки
     }
+
+
+    @FXML
+    protected void reverseTableShow() {
+        reverseTable(tableView, footerLabel);
+    }
+
+
+
+//    @FXML
+//    protected void saveToLocal() {
+//
+//    }
 
 //    @FXML
 //    protected void checkAll() {
@@ -112,74 +155,45 @@ public class Controller {
 //        });
 //    }
 
-//    @FXML
-//    protected void buttonMergeFiles() {
-//        final FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Select directory for save");
-//        fileChooser.setInitialDirectory(new File(SiteScrapper.getLastOpenedDirectory()));
-//        fileChooser.getExtensionFilters().addAll(
-//                new FileChooser.ExtensionFilter("PDF", "*.pdf")
-//        );
-//
-//        Stage stage = (Stage) addLink.getScene().getWindow();
-//        File savedFile = fileChooser.showSaveDialog(stage);
-//
-//        try {
-//            SiteScrapper.setLastOpenedDirectory(savedFile.getParent());
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
-//
-//        boolean isMerged = mergePDFs(savedFile.getAbsolutePath());
-//
-//        if (isMerged) {
-//            footerLabel.setText("Files merged as " + savedFile.getName());
-//
-//            Desktop desktop = Desktop.getDesktop();
-//            try {
-//                desktop.open(savedFile);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            footerLabel.setText("Files not bound: attempt to save to one of the bound files");
-//        }
-//
-//    }
-
-//    private boolean mergePDFs(String pathForSave) {
-//
-//        PDFMergerUtility mergerUtility = new PDFMergerUtility();
-//
-//        PDDocumentInformation documentInformation = new PDDocumentInformation();
-//        documentInformation.setTitle("PDFMerger document");
-//        documentInformation.setSubject("Merging PDF documents with Apache PDF Box by PDFMerger app");
-//
-//        try {
-//            for (String path : listView.getItems()) {
-//                if (pathForSave.equalsIgnoreCase(path)) {
-//                    return false;
-//                } else {
-//                    mergerUtility.addSource(path);
-//                    mergerUtility.setDestinationFileName(pathForSave);
-//                    mergerUtility.setDestinationDocumentInformation(documentInformation);
-//                    mergerUtility.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly());
-//                }
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return true;
-//    }
-
-
     @FXML
     protected void getAbout() {
 
+        showHelpWindow();
+
+//        Dialog<String> dialog = new Dialog<>();
+//        dialog.initOwner(addLinkField.getScene().getWindow());
+//        dialog.setTitle("Справка");
+//        dialog.setHeaderText("Look, a Custom Login Dialog");
+//
+//        ButtonType okButton = new ButtonType("Понятно", ButtonBar.ButtonData.OK_DONE);
+//
+//        dialog.setDialogPane(new DialogPane() {
+//            @Override protected Node createButtonBar() {
+//                var buttonBar = (ButtonBar)super.createButtonBar();
+//                buttonBar.setButtonOrder("L_O_R");
+//                return buttonBar;
+//            }
+//        });
+//
+//        dialog.getDialogPane().getButtonTypes().addAll(okButton);
+//        DialogPane dialogPane = dialog.getDialogPane();
+//        dialogPane.setContentText("ButtonCentered Button");
+//
+//        Label label = new Label(text);
+//
+//        VBox layout = new VBox(label);
+//
+////        dialogPane.setContent();
+//
+//
+////        dialog.getDialogPane().getScene().getStylesheets().add(getClass().getResource(SiteScrapper.getTheme()).toExternalForm());
+////
+//        dialog.showAndWait();
     }
+
+
+
+
 
     @FXML
     protected void changeTheme() {
@@ -189,25 +203,18 @@ public class Controller {
             scene.getStylesheets().set(0, getClass().getResource("css/dark-style.css").toExternalForm());
             themeChangerIcon.setIconLiteral("fltfmz-weather-sunny-20");
             SiteScrapper.setTheme("css/dark-style.css");
-            footerLabel.setText("Dark theme enabled");
+            footerLabel.setText("Включена тёмная тема");
         } else {
             scene.getStylesheets().set(0, getClass().getResource("css/light-style.css").toExternalForm());
             themeChangerIcon.setIconLiteral("fltfmz-weather-moon-20");
             SiteScrapper.setTheme("css/light-style.css");
-            footerLabel.setText("Light theme enabled");
+            footerLabel.setText("Включена светлая тема");
         }
     }
 
 
 
-//    private boolean isListViewReady() {
-//        if (listView.getItems().size() <= 1) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
-//
+
 //    private void setButtonsActive() {
 //        moveSelectedUp.setDisable(false);
 //        moveSelectedDown.setDisable(false);
@@ -226,38 +233,5 @@ public class Controller {
 //        mergeFiles.setDisable(true);
 //    }
 
-
-//    private void addListViewFooterLabelInfoEventListener() {
-//        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-//
-//        listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//
-//                footerLabel.setText("Selected: " + listView.getSelectionModel().getSelectedIndices().size());
-//            }
-//        });
-//    }
-
-//    private void addListDragAndDropEventListener() {
-//        listView.setOnDragOver(event -> {
-//            event.acceptTransferModes(TransferMode.COPY);
-//            event.consume();
-//        });
-//
-//        listView.setOnDragDropped((DragEvent event) -> {
-//            Dragboard dragboard = event.getDragboard();
-//
-//            if (dragboard.hasFiles()) {
-//                showFiles(dragboard.getFiles());
-//
-//                event.setDropCompleted(true);
-//            } else {
-//                event.setDropCompleted(false);
-//            }
-//
-//            event.consume();
-//        });
-//    }
 
 }

@@ -25,6 +25,32 @@
 }
 
 
+.button {
+    -fx-text-fill: #458636;
+    -fx-border-radius: 0px;
+    -fx-background-color: white;
+    -fx-padding: 0px;
+}
+.button:hover {
+    -fx-border-color: #167efa;
+    -fx-border-radius: 3px;
+}
+.button:hover .ikonli-font-icon {
+    -fx-fill: #167efa;
+}
+
+.tooltip {
+    -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
+    -fx-font-weight: normal;
+    -fx-text-fill: black;
+    -fx-background: white;
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.5em 0.75em 0.5em 0.75em;
+    -fx-effect: dropshadow(three-pass-box, #1b5793, 7, 0, 2, 2);
+}
+
 .text-field {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
@@ -60,6 +86,21 @@
     -fx-border-width: 1;
     -fx-border-color: #589d47;
     -fx-border-radius: 3px;
+}
+
+#savePathField {
+    -fx-border-radius: 3px 0 0 3px;
+    -fx-border-width: 1 0 1 1;
+    -fx-background-color: none;
+}
+#setLocalPathButton {
+    -fx-border-radius: 0 3px 3px 0;
+    -fx-border-width: 1 1 1 0;
+    -fx-border-color: #167efa;
+}
+#setLocalPathIcon:hover {
+    -fx-fill: #167efa;
+    /*    очень странно, не работает*/
 }
 
 #saveToLocalButton {
@@ -257,6 +298,20 @@
     -fx-label-padding: 0 0 0 8;
 }
 
+#aboutButton:hover {
+    -fx-border-color: transparent;
+    -fx-border-radius: 0px;
+}
+#aboutIcon {
+    -fx-fill: #167efa;
+}
+#aboutButton:hover #aboutIcon {
+    -fx-fill: black;
+}
+
+/*TODO гиперссылка и прочее с окна хелпа*/
+
+
 #themeChangerButton:hover {
     -fx-border-color: transparent;
     -fx-border-radius: 0px;
@@ -264,7 +319,6 @@
 #themeChangerIcon {
     -fx-fill: #167efa;
 }
-
 #themeChangerButton:hover #themeChangerIcon {
     -fx-fill: black;
 }

@@ -1,5 +1,9 @@
 package com.gmail.alexejkrawez.site_scrapper;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +16,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +45,7 @@ public class Parser {
         // dash 2
         {"([^\\u00A0\\s])[-–—]{1,2}[\\u00A0\\s]", "$1 —\u00A0"},
         // dash 3
-        {"^[-–—]{1,2}([^\\u00A0\\s])", "—\u00A0$1"},
+        {"^[-–—]{1,2}[\\u00A0\\s]?([^\\u00A0\\s])", "—\u00A0$1"},
         // dot, question mark, exclamation mark, comma, semicolon with symbol
         {"([\\.,\\?!;])([^\\u00A0\\s\\.,\\?!\"'‚‘‛’‟„“”‹›«»「」『』(){}\\[\\]])", "$1 $2"},
         // quotes and dots 1
@@ -81,19 +87,19 @@ public class Parser {
 //        driver.quit();
         List<Chapter> tableOfContents = new ArrayList<>();
         tableOfContents.add(new Chapter("Том 1 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 2 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 3 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 4 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 5 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 6 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 7 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 8 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 9 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 10 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 11 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 12 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 13 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 14 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 2 Глава 124 Нисхождение  небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 3 Глава 125 Нисхождение владыки  до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 4 Глава 126 Нисхождение владыки небес  земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 5 Глава 127 Нисхождение владыки небес до  и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 6 Глава 128 Нисхождение владыки небес до земли   обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 7 Глава 129 Нисхождение владыки небес до земли и восхождение ", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 8 Глава 130 владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 9 Глава 131 небес до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 10 Глава 132 Нисхождение до земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 11 Глава 133 Нисхождение владыки  земли и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 12 Глава 134 Нисхождение владыки небес  и восхождение обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 13 Глава 135 Нисхождение владыки небес до  обратно", "https://ranobelib.me/"));
+        tableOfContents.add(new Chapter("Том 14 Глава 136 Нисхождение владыки небес до земли", "https://ranobelib.me/"));
         return tableOfContents;
     }
 
@@ -110,43 +116,37 @@ public class Parser {
 //        return chaptersLinks;
 //    }
 
-    // to index is included
-    protected static void getData(int from, int to, List<Chapter> tableOfContents) {
-//        List<Chapter> tableOfContents = getTableOfContents(url);
-
+    protected static void getData(List<Chapter> checkedChapters) {
         // get chapters
-        title = getTitleName(tableOfContents.get(0).getChapterLink());
+        title = getTitleName(checkedChapters.get(0).getChapterLink());
         documentCreator = new DocumentCreator();
         documentCreator.createDocument(title);
-        getChapters(7, 8, tableOfContents); //TODO заменить на адекват
-//        getChapters(tableOfContents);
-
-        // save document
-        documentCreator.saveDocument(title);
+        getChapters(checkedChapters);
     }
 
-
-    private static void getChapters(List<Chapter> tableOfContents) {
-        getChapters(0, tableOfContents.size() - 1, tableOfContents);
+    protected static void saveDocument(String pathToSave, Label footerLabel) {
+        if (documentCreator.saveDocument(pathToSave, title)) {
+            footerLabel.setText("Сохранено!");
+        }
     }
 
     // to index is included
-    private static void getChapters(int from, int to, List<Chapter> tableOfContents) {
-        List<Chapter> chapters = tableOfContents;
+    private static void getChapters(List<Chapter> checkedChapters) {
+//        List<Chapter> chapters = tableOfContents;
+        //TODO: нарезать на несколько листов по 50- штук в каждом
+//        if (from != 0 && tableOfContents.size() - 1 != to) {
+//            chapters = tableOfContents.subList(from, to + 1);
+//        }
 
-        if (from != 0 && tableOfContents.size() - 1 != to) {
-            chapters = tableOfContents.subList(from, to + 1); //TODO: нарезать на несколько листов по 50- штук в каждом
-        }
-
-        for (int i = 0, chaptersSize = chapters.size() - 1; i < chaptersSize; i++) {
-            Chapter chapter = chapters.get(i);
+        for (int i = 0, chaptersSize = checkedChapters.size() - 1; i < chaptersSize; i++) {
+            Chapter chapter = checkedChapters.get(i);
             documentCreator.addChapterName(chapter.getChapterName());
             getChapter(chapter);
             documentCreator.addPageBreak();
         }
 
         // last chapter without page break
-        Chapter chapter = chapters.get(chapters.size() - 1);
+        Chapter chapter = checkedChapters.get(checkedChapters.size() - 1);
         documentCreator.addChapterName(chapter.getChapterName());
         getChapter(chapter);
     }

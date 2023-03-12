@@ -115,15 +115,16 @@ public class DocumentCreator {
 //        color = factory.createColor();
     }
 
-    protected void saveDocument(String name) {
-        String path = "E:" + File.separator; //TODO заменить на адекватное
-        File file = new File(path + name + ".docx");
+    protected boolean saveDocument(String pathToSave, String name) {
+        File file = new File(pathToSave + File.separator + name + ".docx");
         try {
             word.save(file);
             log.info("Saved successfully");
+            return true;
         } catch (Docx4JException e) {
             log.error(e.getLocalizedMessage());
         }
+        return false;
     }
 
     protected void addTextParagraph(String source) {
