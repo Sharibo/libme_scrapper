@@ -3,6 +3,7 @@ package com.gmail.alexejkrawez.libme_scrapper;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -81,17 +82,18 @@ public class Controller {
     @FXML
     protected void getTableOfContents() {
         getTableOfContentsButton.setDisable(true);
-        String link = addLinkField.getText();
-        if (checkUrl(link, footerLabel)) {
-            tableOfContents = Parser.getTableOfContents(link);
+
+        String url = addLinkField.getText();
+
+        if (checkUrl(url, footerLabel)) {
+            tableOfContents = Parser.getTableOfContents(url);
 //            tableOfContents = Parser.getTableOfContents("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
             showChapters(tableOfContents, tableView, footerLabel);
 
-            getTableOfContentsButton.setDisable(false);
-            saveToLocalButton.setDisable(false); // TODO вынести отдельно
-            globalCheckbox.setDisable(false);
-            reverseTableShowButton.setDisable(false);
+            setEnable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
         }
+
+        getTableOfContentsButton.setDisable(false);
     }
 
     @FXML
@@ -115,20 +117,21 @@ public class Controller {
 
     @FXML
     protected void saveToLocal() {
-        // TODO блокировать кнопки
-        // TODO получение и проверка пути сохранения
+        setDisable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton);
         String pathToSave = savePathField.getText();
 
+            // получение и проверка пути сохранения
         if (checkPath(pathToSave, footerLabel)) {
-            // TODO извлечение выделения / галочек +/-
+            // извлечение выделения / галочек
             List<Chapter> checkedChapters = getCheckedChapters(tableOfContents);
-            // TODO получение данных +
+            // получение данных
             Parser.getData(checkedChapters);
-            // TODO и сохранение
+            // и сохранение
             Parser.saveDocument(pathToSave, footerLabel);
             // TODO + сделать анимацию что такая-то глава загрузилась? Новый поток?
         }
-        // TODO разблокировать кнопки
+        // TODO возможно остальные кнопки тоже блокировать
+        setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton);
     }
 
 
@@ -218,23 +221,17 @@ public class Controller {
 
 
 
-//    private void setButtonsActive() {
-//        moveSelectedUp.setDisable(false);
-//        moveSelectedDown.setDisable(false);
-//        removeSelected.setDisable(false);
-//        removeAll.setDisable(false);
-//        if (isListViewReady()) {
-//            mergeFiles.setDisable(false);
-//        }
-//    }
-//
-//    private void setButtonsInactive() {
-//        moveSelectedUp.setDisable(true);
-//        moveSelectedDown.setDisable(true);
-//        removeSelected.setDisable(true);
-//        removeAll.setDisable(true);
-//        mergeFiles.setDisable(true);
-//    }
+    private void setEnable(ButtonBase... items) {
+        for (ButtonBase item : items) {
+            item.setDisable(false);
+        }
+    }
+
+    private void setDisable(ButtonBase... items) {
+        for (ButtonBase item : items) {
+            item.setDisable(true);
+        }
+    }
 
 
 }

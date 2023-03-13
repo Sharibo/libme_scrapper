@@ -72,6 +72,8 @@ public class Parser {
 //        );
 //        Collections.reverse(tableOfContents);
 //
+//        title = getTitleName(checkedChapters.get(0).getChapterLink());
+//
 //        log.info("Table of content downloaded successfully");
 //        driver.quit();
         List<Chapter> tableOfContents = new ArrayList<>();
@@ -92,6 +94,21 @@ public class Parser {
         return tableOfContents;
     }
 
+    private static String getTitleName(String url) {
+        Pattern p = Pattern.compile("ranobelib.me/([A-Za-z0-9-]+)/");
+        Matcher m = p.matcher(url);
+        if (m.find()) {
+            String capitalized = m.group(1).substring(0, 1).toUpperCase() + m.group(1).substring(1);
+            if (capitalized.matches("^[A-Za-z0-9-]+novel$")) {
+                capitalized = capitalized.substring(0, capitalized.length() - 6);
+            }
+            return capitalized.replaceAll("-", " ");
+        } else {
+            log.error("Title name not found in url: " + url);
+            return "Unknown";
+        }
+    }
+
 //    private static List<Chapter> getTableOfContents(EdgeDriver driver) {
 //        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
 //        new Actions(driver).moveToElement(chaptersGetter).click().perform();
@@ -107,16 +124,9 @@ public class Parser {
 
     protected static void getData(List<Chapter> checkedChapters) {
         // get chapters
-        title = getTitleName(checkedChapters.get(0).getChapterLink());
         documentCreator = new DocumentCreator();
         documentCreator.createDocument(title);
         getChapters(checkedChapters);
-    }
-
-    protected static void saveDocument(String pathToSave, Label footerLabel) {
-        if (documentCreator.saveDocument(pathToSave, title)) {
-            footerLabel.setText("Сохранено!");
-        }
     }
 
     // to index is included
@@ -182,18 +192,9 @@ public class Parser {
         return trimmedText;
     }
 
-    private static String getTitleName(String url) {
-        Pattern p = Pattern.compile("ranobelib.me/([A-Za-z0-9-]+)/");
-        Matcher m = p.matcher(url);
-        if (m.find()) {
-            String capitalized = m.group(1).substring(0, 1).toUpperCase() + m.group(1).substring(1);
-            if (capitalized.matches("^[A-Za-z0-9-]+novel$")) {
-                capitalized = capitalized.substring(0, capitalized.length() - 6);
-            }
-            return capitalized.replaceAll("-", " ");
-        } else {
-            log.error("Title name not found in url: " + url);
-            return "Unknown";
+    protected static void saveDocument(String pathToSave, Label footerLabel) {
+        if (documentCreator.saveDocument(pathToSave, title)) {
+            footerLabel.setText("Сохранено!");
         }
     }
 
