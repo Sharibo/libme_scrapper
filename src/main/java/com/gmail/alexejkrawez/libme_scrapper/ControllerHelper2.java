@@ -1,4 +1,4 @@
-//package com.gmail.alexejkrawez.site_scrapper;
+//package com.gmail.alexejkrawez.libme_scrapper;
 //
 //import javafx.beans.value.ObservableValue;
 //import javafx.scene.control.Hyperlink;

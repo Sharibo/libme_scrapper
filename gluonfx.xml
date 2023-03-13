@@ -7,8 +7,8 @@
             com.gmail.alexejkrawez.site_scrapper.Launcher
         </mainClass>
         <reflectionList>
-            <list>com.gmail.alexejkrawez.site_scrapper.SiteScrapper</list>
-            <list>com.gmail.alexejkrawez.site_scrapper.Controller</list>
+            <list>com.gmail.alexejkrawez.libme_scrapper.LibMeScrapper</list>
+            <list>com.gmail.alexejkrawez.libme_scrapper.Controller</list>
             <list>com.sun.javafx.application.PlatformImpl</list>
             <list>com.sun.glass.ui.Application</list>
             <list>com.sun.glass.ui.win.WinApplication</list>

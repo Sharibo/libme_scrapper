@@ -1,4 +1,4 @@
-package com.gmail.alexejkrawez.site_scrapper;
+package com.gmail.alexejkrawez.libme_scrapper;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,7 +17,6 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.slf4j.Logger;
 
@@ -35,15 +34,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ControllerHelper {
 
     private static final Logger log = getLogger(ControllerHelper.class);
-    private static Stage helpStage = new Stage();
     private static final ObservableList<TableRow> tableList = FXCollections.observableArrayList();
     private static final ObservableList<TableRow> tableListReversed = FXCollections.observableArrayList();
     private static boolean isReversed = false;
     private static ObservableList<Integer> selectedIndices;
 
-    public static Stage getHelpStage() {
-        return helpStage;
-    }
 
     protected static void initializeTableView(TableView<TableRow> tableView, Label footerLabel) {
         tableView.setId("table-view");
@@ -118,7 +113,6 @@ public class ControllerHelper {
                                        Label footerLabel) {
 
         if (tableOfContents != null && !tableOfContents.isEmpty()) {
-
             for (Chapter chapter : tableOfContents) {
                 Hyperlink url = new Hyperlink(chapter.getChapterLink());
                 url.setText("url \u2B0F");
@@ -170,9 +164,9 @@ public class ControllerHelper {
         } else {
             log.error("Url is not walid: " + url);
             footerLabel.setText("Проверьте URL-адрес!");
-            return false;
         }
 
+        return false;
     }
 
     protected static boolean checkPath(String pathToSave, Label footerLabel) {
@@ -187,8 +181,9 @@ public class ControllerHelper {
         } catch (InvalidPathException e) {
             log.error(e.getLocalizedMessage());
             footerLabel.setText("Проверьте путь для сохранения!");
-            return false;
         }
+
+        return false;
     }
 
     protected static void reverseTable(TableView<TableRow> tableView, Label footerLabel) {
@@ -204,7 +199,7 @@ public class ControllerHelper {
     }
 
     protected static void showHelpWindow() {
-        FXMLLoader fxmlLoader = new FXMLLoader(SiteScrapper.class.getResource("dialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LibMeScrapper.class.getResource("help.fxml"));
         Scene scene = null;
 
         try {
@@ -215,19 +210,23 @@ public class ControllerHelper {
 
         try (InputStream logoStream = ControllerHelper.class.getResourceAsStream("icons/logo.png")) { // TODO другое лого
             javafx.scene.image.Image logo = new Image(logoStream);
-            helpStage.getIcons().add(logo);
+            LibMeScrapper.getHelpStage().getIcons().add(logo);
         } catch (NullPointerException | IOException e) {
             log.error(e.getLocalizedMessage());
         }
 
-        scene.getStylesheets().add(ControllerHelper.class.getResource(SiteScrapper.getTheme()).toExternalForm());
+        if (LibMeScrapper.getTheme().equals("css/light-style.css")) {
+            scene.getStylesheets().add(ControllerHelper.class.getResource("css/help-light-style.css").toExternalForm());
+        } else {
+            scene.getStylesheets().add(ControllerHelper.class.getResource("css/help-dark-style.css").toExternalForm());
+        }
 
-        helpStage.setTitle("Справка");
-        helpStage.setMinWidth(350.0);
-        helpStage.setMinHeight(400.0);
+        LibMeScrapper.getHelpStage().setTitle("Справка");
+        LibMeScrapper.getHelpStage().setMinHeight(450.0);
+        LibMeScrapper.getHelpStage().setMinWidth(375.0);
 
-        helpStage.setScene(scene);
-        helpStage.showAndWait();
+        LibMeScrapper.getHelpStage().setScene(scene);
+        LibMeScrapper.getHelpStage().show();
     }
 
 }

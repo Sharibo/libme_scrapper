@@ -1,4 +1,4 @@
-package com.gmail.alexejkrawez.site_scrapper;
+package com.gmail.alexejkrawez.libme_scrapper;
 
 public class Chapter {
     private String chapterName;

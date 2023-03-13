@@ -1,4 +1,4 @@
-package com.gmail.alexejkrawez.site_scrapper;
+package com.gmail.alexejkrawez.libme_scrapper;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,26 +16,31 @@ import java.util.Properties;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class SiteScrapper extends Application {
+public class LibMeScrapper extends Application {
 
-    private static final Logger log = getLogger(SiteScrapper.class);
+    private static final Logger log = getLogger(LibMeScrapper.class);
     private static String lastOpenedDirectory = "user.home";
     private static String theme = "css/light-style.css";
+    private static final Stage helpStage = new Stage();
 
     protected static String getLastOpenedDirectory() {
         return lastOpenedDirectory;
     }
     protected static void setLastOpenedDirectory(String lastOpenedDirectory) {
-        SiteScrapper.lastOpenedDirectory = lastOpenedDirectory;
+        LibMeScrapper.lastOpenedDirectory = lastOpenedDirectory;
     }
 
     protected static String getTheme() {
         return theme;
     }
     protected static void setTheme(String theme) {
-        SiteScrapper.theme = theme;
+        LibMeScrapper.theme = theme;
     }
 
+
+    public static Stage getHelpStage() {
+        return helpStage;
+    }
 
 
     public static void main(String[] args) {
@@ -73,7 +78,7 @@ public class SiteScrapper extends Application {
         lastOpenedDirectory = properties.getProperty("lastOpenedDirectory", System.getProperty("user.home"));
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(SiteScrapper.class.getResource("index.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LibMeScrapper.class.getResource("index.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
 
@@ -114,7 +119,7 @@ public class SiteScrapper extends Application {
                 e.printStackTrace();
             }
 
-            ControllerHelper.getHelpStage().close();
+            helpStage.close();
         });
 
     }

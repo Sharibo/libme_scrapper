@@ -1,4 +1,4 @@
-package com.gmail.alexejkrawez.site_scrapper;
+package com.gmail.alexejkrawez.libme_scrapper;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 
-import static com.gmail.alexejkrawez.site_scrapper.ControllerHelper.*;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.*;
 
 public class Controller {
 
@@ -49,16 +49,15 @@ public class Controller {
     @FXML
     public void initialize() {
 
-        savePathField.setText(SiteScrapper.getLastOpenedDirectory());
+        savePathField.setText(LibMeScrapper.getLastOpenedDirectory());
 
-        if (SiteScrapper.getTheme().equals("css/dark-style.css")) {
+        if (LibMeScrapper.getTheme().equals("css/dark-style.css")) {
             themeChangerIcon.setIconLiteral("fltfmz-weather-sunny-20");
         }
 
         initializeTableView(tableView, footerLabel);
 
         // TODO вынести (глобальный чекбокс)
-//        TableColumn<TableRow, ?> tableRowTableColumn = tableView.getColumns().get(0);
         globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             for (TableRow item : tableView.getItems()) {
                 item.checkboxProperty().set(newValue);
@@ -98,7 +97,7 @@ public class Controller {
     @FXML
     public void setLocalPath() {
         final DirectoryChooser directoryChooser = new DirectoryChooser();
-        File lastOpenedDirectory = new File(SiteScrapper.getLastOpenedDirectory());
+        File lastOpenedDirectory = new File(LibMeScrapper.getLastOpenedDirectory());
         directoryChooser.setInitialDirectory(lastOpenedDirectory);
         directoryChooser.setTitle("Выберите путь для сохранения");
 
@@ -109,7 +108,7 @@ public class Controller {
             return;
         }
 
-        SiteScrapper.setLastOpenedDirectory(file.getAbsolutePath());
+        LibMeScrapper.setLastOpenedDirectory(file.getAbsolutePath());
         savePathField.setText(file.getAbsolutePath());
         footerLabel.setText("Путь сохранения: " + file.getAbsolutePath());
     }
@@ -199,15 +198,19 @@ public class Controller {
     protected void changeTheme() {
         Scene scene = themeChangerButton.getScene();
 
-        if (SiteScrapper.getTheme().equals("css/light-style.css")) {
+        if (LibMeScrapper.getTheme().equals("css/light-style.css")) {
             scene.getStylesheets().set(0, getClass().getResource("css/dark-style.css").toExternalForm());
+            LibMeScrapper.getHelpStage().getScene()
+                    .getStylesheets().set(0, getClass().getResource("css/help-dark-style.css").toExternalForm());
             themeChangerIcon.setIconLiteral("fltfmz-weather-sunny-20");
-            SiteScrapper.setTheme("css/dark-style.css");
+            LibMeScrapper.setTheme("css/dark-style.css");
             footerLabel.setText("Включена тёмная тема");
         } else {
             scene.getStylesheets().set(0, getClass().getResource("css/light-style.css").toExternalForm());
+            LibMeScrapper.getHelpStage().getScene()
+                    .getStylesheets().set(0, getClass().getResource("css/help-light-style.css").toExternalForm());
             themeChangerIcon.setIconLiteral("fltfmz-weather-moon-20");
-            SiteScrapper.setTheme("css/light-style.css");
+            LibMeScrapper.setTheme("css/light-style.css");
             footerLabel.setText("Включена светлая тема");
         }
     }

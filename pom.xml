@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.gmail.alexejkrawez</groupId>
-    <artifactId>site_scrapper</artifactId>
+    <artifactId>libme_scrapper</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>site_scrapper</name>
+    <name>lib.me scrapper</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -109,7 +109,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.gmail.alexejkrawez.site_scrapper/com.gmail.alexejkrawez.site_scrapper.SiteScrapper
+                                com.gmail.alexejkrawez.site_scrapper/com.gmail.alexejkrawez.libme_scrapper.LibMeScrapper
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
@@ -163,7 +163,7 @@
 <!--                <version>0.0.8</version>-->
 <!--                <configuration>-->
 <!--                    <mainClass>-->
-<!--                        com.gmail.alexejkrawez.site_scrapper.SiteScrapper-->
+<!--                        com.gmail.alexejkrawez.libme_scrapper.LibMeScrapper-->
 <!--                    </mainClass>-->
 <!--                </configuration>-->
 <!--                <executions>-->
@@ -171,11 +171,11 @@
 <!--                        <id>default-cli</id>-->
 <!--                        <configuration>-->
 <!--                            <mainClass>-->
-<!--                                com.gmail.alexejkrawez.site_scrapper.SiteScrapper-->
+<!--                                com.gmail.alexejkrawez.libme_scrapper.LibMeScrapper-->
 <!--                            </mainClass>-->
 <!--                            <manifest>-->
 <!--                                <addClasspath>true</addClasspath>-->
-<!--                                <mainClass>com.gmail.alexejkrawez.site_scrapper.SiteScrapper</mainClass>-->
+<!--                                <mainClass>com.gmail.alexejkrawez.libme_scrapper.LibMeScrapper</mainClass>-->
 <!--                            </manifest>-->
 <!--                        </configuration>-->
 <!--                    </execution>-->

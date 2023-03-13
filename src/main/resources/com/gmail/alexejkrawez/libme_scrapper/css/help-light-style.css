@@ -1,0 +1,41 @@
+@font-face {
+    -fx-font-family: "Roboto-Bold";
+    -fx-font-weight: bold;
+    -fx-font-style: normal;
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
+}
+
+.root {
+    -fx-font-family: 'Roboto-Bold', 'sans-serif';
+    -fx-font-size: 1em;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+}
+
+.hyperlink {
+    -fx-padding: 0 0 0 0;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+#closeDialogButton {
+    -fx-padding: 0px;
+    -fx-text-fill: #458636;
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-color: white white #589d47 white;
+}
+#closeDialogButton:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #589d47;
+    -fx-border-width: 1;
+    -fx-border-color: #589d47;
+    -fx-border-radius: 3px;
+}
+#closeDialogButton:pressed {
+    -fx-text-fill: #458636;
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-color: #589d47;
+    -fx-border-radius: 3px;
+}
