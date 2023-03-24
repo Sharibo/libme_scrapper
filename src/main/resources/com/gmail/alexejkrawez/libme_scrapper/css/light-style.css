@@ -12,11 +12,6 @@
     src: url('../fonts/RobotoCondensed-Light.ttf') format('truetype');
 }
 
-/** {*/
-/*    -fx-lightskyblue: lightskyblue;*/
-/*    -fx-blue: #167efa;*/
-/*}*/
-
 .root {
     -fx-font-family: 'Roboto-Bold', 'sans-serif';
     -fx-font-size: 1em;
@@ -43,7 +38,6 @@
     -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
     -fx-font-weight: normal;
     -fx-text-fill: black;
-    -fx-background: white;
     -fx-background-color: white;
     -fx-background-radius: 6px;
     -fx-background-insets: 0;
@@ -100,7 +94,6 @@
 }
 #setLocalPathIcon:hover {
     -fx-fill: #167efa;
-    /*    очень странно, не работает*/
 }
 
 #saveToLocalButton {
@@ -140,24 +133,9 @@
 /*    -fx-prompt-text-fill: transparent;*/
 /*}*/
 
+/*#globalCheckbox {*/
 
-
-
-/*#getTableOfContentsButton:hover {*/
-/*    -fx-border-color: transparent;*/
-/*    -fx-border-radius: 0px;*/
 /*}*/
-/*#getTableOfContentsIcon {*/
-/*    -fx-fill: #167efa;*/
-/*}*/
-/*#getTableOfContentsButton:hover #getTableOfContentsIcon {*/
-/*    -fx-fill: black;*/
-/*}*/
-
-
-#globalCheckbox {
-
-}
 
 /* tableView */
 .noheader .column-header-background {
@@ -179,22 +157,18 @@
     -fx-cell-size: 22px;
     -fx-background-color: white;
 }
-
 .table-row-cell:filled:selected:focused, .table-row-cell:filled:selected {
     -fx-background-color: #589d47;
     -fx-text-fill: white;
 }
-
 .table-row-cell:filled:selected:focused, .table-row-cell:filled:selected .hyperlink {
     -fx-background-color: #589d47;
     -fx-text-fill: white;
 }
-
 .table-row-cell:filled:hover {
     -fx-background-color: #87b77b;
     -fx-text-fill: white;
 }
-
 .table-row-cell:filled:hover .hyperlink {
     -fx-background-color: #87b77b;
     -fx-text-fill: white;

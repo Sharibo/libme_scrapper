@@ -21,37 +21,155 @@
 
 
 .button {
-    -fx-text-fill: #a0a0a0;
+    -fx-text-fill: #d0d0d0;
     -fx-border-radius: 0px;
     -fx-background-color: black;
     -fx-padding: 0px;
 }
-
 .button:hover {
     -fx-border-color: #4897fd;
     -fx-border-radius: 3px;
 }
-
-
-#addFileIcon {
-    -fx-fill: #3E932AFF;
-}
-#addLinkField:hover #addFileIcon {
-    -fx-fill: #42b028;
-}
-#addLinkField:hover {
-    -fx-underline: true;
+.button:hover .ikonli-font-icon {
+    -fx-fill: #4897fd;
 }
 
-#moveSelectedUpIcon {
-    -fx-fill: #a0a0a0;
+.tooltip {
+    -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
+    -fx-font-weight: normal;
+    -fx-text-fill: white;
+    -fx-background-color: #1e1e1e;
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.5em 0.75em 0.5em 0.75em;
+    -fx-effect: dropshadow(three-pass-box, #4897fd, 7, 0, 2, 2);
 }
-#getTableOfContents:hover #moveSelectedUpIcon {
-    -fx-fill: #59a4ff;
+
+.text-field {
+    -fx-text-fill: #d0d0d0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-radius: 3px;
+    -fx-border-width: 1;
+    -fx-border-color: #4897fd;
+    -fx-background-radius: 3px;
+    -fx-background-color: #1e1e1e, #1e1e1e;
 }
-#moveSelectedUpIcon:disabled {
-    -fx-fill: white;
+.text-field:focused {
+    -fx-font-weight: bold;
+    -fx-text-fill: #d0d0d0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
+
+#getTableOfContentsButton {
+    -fx-padding: 0px;
+    -fx-text-fill: #42b028;
+    -fx-background-color: black;
+    -fx-border-width: 1;
+    -fx-border-color: black black #3E932AFF black;
+}
+#getTableOfContentsButton:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #3E932AFF;
+    -fx-border-width: 1;
+    -fx-border-color: #3E932AFF;
+    -fx-border-radius: 3px;
+}
+#getTableOfContentsButton:pressed {
+    -fx-text-fill: #42b028;
+    -fx-background-color: black;
+    -fx-border-width: 1;
+    -fx-border-color: #3E932AFF;
+    -fx-border-radius: 3px;
+}
+
+#savePathField {
+    -fx-border-radius: 3px 0 0 3px;
+    -fx-border-width: 1 0 1 1;
+    /*-fx-background-color: none;*/
+}
+#setLocalPathButton {
+    -fx-border-radius: 0 3px 3px 0;
+    -fx-border-width: 1 1 1 0;
+    -fx-border-color: #4897fd;
+    -fx-background-color: #1e1e1e;
+}
+#setLocalPathIcon:hover {
+    -fx-fill: #4897fd;
+}
+
+#saveToLocalButton {
+    -fx-padding: 0px;
+    -fx-text-fill: #42b028;
+    -fx-background-color: black;
+    -fx-border-width: 1;
+    -fx-border-color: black black #3E932AFF black;
+}
+#saveToLocalButton:disabled {
+    -fx-padding: 0px;
+    -fx-text-fill: white;
+    -fx-background-color: black;
+    -fx-border-width: 1;
+    -fx-border-color: black black white black;
+}
+#saveToLocalButton:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #3E932AFF;
+    -fx-border-width: 1;
+    -fx-border-color: #3E932AFF;
+    -fx-border-radius: 3px;
+}
+#saveToLocalButton:pressed {
+    -fx-text-fill: #42b028;
+    -fx-background-color: black;
+    -fx-border-width: 1;
+    -fx-border-color: #3E932AFF;
+    -fx-border-radius: 3px;
+}
+
+/* tableView */
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+#table-view {
+    -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
+    -fx-font-weight: bold;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-color: #d0d0d0;
+    -fx-border-width: 2 0 2 0;
+    -fx-background-color: #1e1e1e;
+}
+
+.table-row-cell {
+    -fx-cell-size: 22px;
+    -fx-background-color: #1e1e1e;
+}
+.table-row-cell:filled:selected:focused, .table-row-cell:filled:selected {
+    -fx-background-color: #3E932AFF;
+    -fx-text-fill: #d0d0d0;
+}
+.table-row-cell:filled:selected:focused, .table-row-cell:filled:selected .hyperlink {
+    -fx-background-color: #3E932AFF;
+    -fx-text-fill: #d0d0d0;
+}
+.table-row-cell:filled:hover {
+    -fx-background-color: #115411;
+    -fx-text-fill: #d0d0d0;
+}
+.table-row-cell:filled:hover .hyperlink {
+    -fx-background-color: #115411;
+    -fx-text-fill: #d0d0d0;
+}
+
+.table-view > .virtual-flow > .corner {
+    -fx-background-color: #232323;
+}
+
 
 #moveSelectedDownIcon {
     -fx-fill: #a0a0a0;

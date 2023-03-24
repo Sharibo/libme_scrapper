@@ -85,13 +85,13 @@ public class Controller {
 
         String url = addLinkField.getText();
 
-        if (checkUrl(url, footerLabel)) {
+//        if (checkUrl(url, footerLabel)) {
             tableOfContents = Parser.getTableOfContents(url);
 //            tableOfContents = Parser.getTableOfContents("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
             showChapters(tableOfContents, tableView, footerLabel);
 
             setEnable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
-        }
+//        }
 
         getTableOfContentsButton.setDisable(false);
     }
