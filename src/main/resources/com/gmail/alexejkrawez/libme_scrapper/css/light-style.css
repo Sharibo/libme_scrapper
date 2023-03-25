@@ -162,7 +162,7 @@
     -fx-text-fill: white;
 }
 .table-row-cell:filled:selected:focused, .table-row-cell:filled:selected .hyperlink {
-    -fx-background-color: #589d47;
+    /*-fx-background-color: #589d47;*/
     -fx-text-fill: white;
 }
 .table-row-cell:filled:hover {
@@ -170,7 +170,7 @@
     -fx-text-fill: white;
 }
 .table-row-cell:filled:hover .hyperlink {
-    -fx-background-color: #87b77b;
+    /*-fx-background-color: #87b77b;*/
     -fx-text-fill: white;
 }
 
@@ -284,29 +284,29 @@
     -fx-fill: black;
 }
 
-/* help window */
-#closeDialogButton {
-    -fx-padding: 0px;
-    -fx-text-fill: #458636;
-    -fx-background-color: white;
-    -fx-border-width: 1;
-    -fx-border-color: white white #589d47 white;
-}
-#closeDialogButton:hover {
-    -fx-text-fill: white;
-    -fx-background-color: #589d47;
-    -fx-border-width: 1;
-    -fx-border-color: #589d47;
-    -fx-border-radius: 3px;
-}
-#closeDialogButton:pressed {
-    -fx-text-fill: #458636;
-    -fx-background-color: white;
-    -fx-border-width: 1;
-    -fx-border-color: #589d47;
-    -fx-border-radius: 3px;
-}
-/* help window end */
+/*!* help window *!*/
+/*#closeDialogButton {*/
+/*    -fx-padding: 0px;*/
+/*    -fx-text-fill: #458636;*/
+/*    -fx-background-color: white;*/
+/*    -fx-border-width: 1;*/
+/*    -fx-border-color: white white #589d47 white;*/
+/*}*/
+/*#closeDialogButton:hover {*/
+/*    -fx-text-fill: white;*/
+/*    -fx-background-color: #589d47;*/
+/*    -fx-border-width: 1;*/
+/*    -fx-border-color: #589d47;*/
+/*    -fx-border-radius: 3px;*/
+/*}*/
+/*#closeDialogButton:pressed {*/
+/*    -fx-text-fill: #458636;*/
+/*    -fx-background-color: white;*/
+/*    -fx-border-width: 1;*/
+/*    -fx-border-color: #589d47;*/
+/*    -fx-border-radius: 3px;*/
+/*}*/
+/*!* help window end *!*/
 
 #themeChangerButton:hover {
     -fx-border-color: transparent;

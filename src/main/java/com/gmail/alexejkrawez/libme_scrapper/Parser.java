@@ -5,11 +5,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -22,6 +28,7 @@ public class Parser {
     private static DocumentCreator documentCreator;
     private static String title;
 
+    private static final String START_READING_BUTTON = "div.media-sidebar__buttons.section";
     private static final String CHAPTERS_GETTER = "//div[@data-reader-modal='chapters']";
     private static final String CHAPTERS = "menu__item";
     private static final String CHAPTER_CONTAINER = "div.reader-container.container.container_center";
@@ -53,6 +60,20 @@ public class Parser {
 
 
     protected static List<Chapter> getTableOfContents(String url) {
+//        // TODO добавить проверку, открыта ли глава или это главная страница.
+//        // get firstChapterUrl from main title page
+//        String firstChapterUrl = null;
+//        try {
+//            document = Jsoup.connect(url)
+//                    .userAgent("Mozilla/5.0")
+//                    .get();
+//            Element data = document.select(START_READING_BUTTON).get(0).children().get(1);
+//            firstChapterUrl = Optional.of(data.attr("href"))
+//                    .orElseThrow(() -> new RuntimeException("firstChapterUrl was not found!"));
+//        } catch (IOException e) {
+//            log.error(url + "\n" + e.getLocalizedMessage());
+//        }
+//
 //        // create a browser
 //        EdgeOptions options = new EdgeOptions();
 //        options.addArguments("--headless=new");
@@ -60,7 +81,7 @@ public class Parser {
 //        EdgeDriver driver = new EdgeDriver(options);
 //
 //        // get url from TextField
-//        driver.navigate().to(url);
+//        driver.navigate().to(firstChapterUrl);
 //
 //        // get table of contents
 //        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
@@ -72,7 +93,7 @@ public class Parser {
 //        );
 //        Collections.reverse(tableOfContents);
 //
-//        title = getTitleName(checkedChapters.get(0).getChapterLink());
+//        title = getTitleName(tableOfContents.get(0).getChapterLink());
 //
 //        log.info("Table of content downloaded successfully");
 //        driver.quit();
