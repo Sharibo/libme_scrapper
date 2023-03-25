@@ -1,6 +1,8 @@
 package com.gmail.alexejkrawez.libme_scrapper;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -22,6 +24,7 @@ public class LibMeScrapper extends Application {
     private static final Stage helpStage = new Stage();
     private static String lastOpenedDirectory = "user.home";
     private static String theme = "css/light-style.css";
+    private static boolean isMaximized = false;
 
     protected static String getLastOpenedDirectory() {
         return lastOpenedDirectory;
@@ -107,26 +110,37 @@ public class LibMeScrapper extends Application {
 
     }
 
+
     private static void setOnExitActions(Stage stage, String location, String settingsFile, Properties properties) {
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 
-            properties.setProperty("windowPosX", Double.toString(stage.getX()) );
-            properties.setProperty("windowPosY", Double.toString(stage.getY()) );
-            properties.setProperty("windowWith", Double.toString(stage.getWidth()) );
-            properties.setProperty("windowHeight", Double.toString(stage.getHeight()) );
-            properties.setProperty("theme", theme);
-            properties.setProperty("lastOpenedDirectory", lastOpenedDirectory);
+            if (stage.maximizedProperty().get()) {
+                properties.setProperty("theme", theme);
+                properties.setProperty("lastOpenedDirectory", lastOpenedDirectory);
 
-            try (FileOutputStream fus = new FileOutputStream(location + settingsFile)) {
-                properties.store(fus, "Saved settings");
-            } catch (Exception e) {
-                e.printStackTrace();
+                try (FileOutputStream fus = new FileOutputStream(location + settingsFile)) {
+                    properties.store(fus, "Saved settings");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                properties.setProperty("windowPosX", Double.toString(stage.getX()));
+                properties.setProperty("windowPosY", Double.toString(stage.getY()));
+                properties.setProperty("windowWith", Double.toString(stage.getWidth()));
+                properties.setProperty("windowHeight", Double.toString(stage.getHeight()));
+                properties.setProperty("theme", theme);
+                properties.setProperty("lastOpenedDirectory", lastOpenedDirectory);
+
+                try (FileOutputStream fus = new FileOutputStream(location + settingsFile)) {
+                    properties.store(fus, "Saved settings");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             helpStage.close();
         });
     }
-
 
     private static void initializeHelpStage() {
         FXMLLoader fxmlLoader = new FXMLLoader(LibMeScrapper.class.getResource("help.fxml"));
