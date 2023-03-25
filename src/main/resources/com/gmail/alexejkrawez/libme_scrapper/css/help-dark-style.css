@@ -6,17 +6,6 @@
 }
 
 .root {
-    color-background: black;
-    color-background-2: black;
-    color-fill: black;
-    color-accent: black;
-    color-border: black;
-    color-text: #d0d0d0;
-    color-text-2: black;
-    color-text-accent: black;
-    color-transparent: transparent;
-
-
     -fx-font-family: 'Roboto-Bold', 'sans-serif';
     -fx-font-size: 1em;
     -fx-font-weight: bold;
