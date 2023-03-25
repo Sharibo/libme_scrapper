@@ -159,38 +159,7 @@ public class Controller {
 
     @FXML
     protected void getAbout() {
-
-        showHelpWindow();
-
-//        Dialog<String> dialog = new Dialog<>();
-//        dialog.initOwner(addLinkField.getScene().getWindow());
-//        dialog.setTitle("Справка");
-//        dialog.setHeaderText("Look, a Custom Login Dialog");
-//
-//        ButtonType okButton = new ButtonType("Понятно", ButtonBar.ButtonData.OK_DONE);
-//
-//        dialog.setDialogPane(new DialogPane() {
-//            @Override protected Node createButtonBar() {
-//                var buttonBar = (ButtonBar)super.createButtonBar();
-//                buttonBar.setButtonOrder("L_O_R");
-//                return buttonBar;
-//            }
-//        });
-//
-//        dialog.getDialogPane().getButtonTypes().addAll(okButton);
-//        DialogPane dialogPane = dialog.getDialogPane();
-//        dialogPane.setContentText("ButtonCentered Button");
-//
-//        Label label = new Label(text);
-//
-//        VBox layout = new VBox(label);
-//
-////        dialogPane.setContent();
-//
-//
-////        dialog.getDialogPane().getScene().getStylesheets().add(getClass().getResource(SiteScrapper.getTheme()).toExternalForm());
-////
-//        dialog.showAndWait();
+        LibMeScrapper.getHelpStage().show();
     }
 
 

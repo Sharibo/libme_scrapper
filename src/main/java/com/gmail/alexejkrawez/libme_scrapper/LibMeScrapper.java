@@ -19,9 +19,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class LibMeScrapper extends Application {
 
     private static final Logger log = getLogger(LibMeScrapper.class);
+    private static final Stage helpStage = new Stage();
     private static String lastOpenedDirectory = "user.home";
     private static String theme = "css/light-style.css";
-    private static final Stage helpStage = new Stage();
 
     protected static String getLastOpenedDirectory() {
         return lastOpenedDirectory;
@@ -36,7 +36,6 @@ public class LibMeScrapper extends Application {
     protected static void setTheme(String theme) {
         LibMeScrapper.theme = theme;
     }
-
 
     public static Stage getHelpStage() {
         return helpStage;
@@ -103,7 +102,12 @@ public class LibMeScrapper extends Application {
         stage.setScene(scene);
         stage.show();
 
+        initializeHelpStage();
+        setOnExitActions(stage, location, settingsFile, properties);
 
+    }
+
+    private static void setOnExitActions(Stage stage, String location, String settingsFile, Properties properties) {
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 
             properties.setProperty("windowPosX", Double.toString(stage.getX()) );
@@ -121,8 +125,37 @@ public class LibMeScrapper extends Application {
 
             helpStage.close();
         });
-
     }
 
+
+    private static void initializeHelpStage() {
+        FXMLLoader fxmlLoader = new FXMLLoader(LibMeScrapper.class.getResource("help.fxml"));
+        Scene scene = null;
+
+        try {
+            scene = new Scene(fxmlLoader.load());
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage());
+        }
+
+        try (InputStream logoStream = ControllerHelper.class.getResourceAsStream("icons/logo.png")) { // TODO другое лого
+            javafx.scene.image.Image logo = new Image(logoStream);
+            LibMeScrapper.getHelpStage().getIcons().add(logo);
+        } catch (NullPointerException | IOException e) {
+            log.error(e.getLocalizedMessage());
+        }
+
+        if (LibMeScrapper.getTheme().equals("css/light-style.css")) {
+            scene.getStylesheets().add(ControllerHelper.class.getResource("css/help-light-style.css").toExternalForm());
+        } else {
+            scene.getStylesheets().add(ControllerHelper.class.getResource("css/help-dark-style.css").toExternalForm());
+        }
+
+        LibMeScrapper.getHelpStage().setTitle("Справка");
+        LibMeScrapper.getHelpStage().setMinHeight(450.0);
+        LibMeScrapper.getHelpStage().setMinWidth(375.0);
+
+        LibMeScrapper.getHelpStage().setScene(scene);
+    }
 
 }

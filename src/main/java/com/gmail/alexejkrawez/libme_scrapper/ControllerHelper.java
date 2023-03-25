@@ -198,35 +198,4 @@ public class ControllerHelper {
         }
     }
 
-    protected static void showHelpWindow() {
-        FXMLLoader fxmlLoader = new FXMLLoader(LibMeScrapper.class.getResource("help.fxml"));
-        Scene scene = null;
-
-        try {
-            scene = new Scene(fxmlLoader.load());
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage());
-        }
-
-        try (InputStream logoStream = ControllerHelper.class.getResourceAsStream("icons/logo.png")) { // TODO другое лого
-            javafx.scene.image.Image logo = new Image(logoStream);
-            LibMeScrapper.getHelpStage().getIcons().add(logo);
-        } catch (NullPointerException | IOException e) {
-            log.error(e.getLocalizedMessage());
-        }
-
-        if (LibMeScrapper.getTheme().equals("css/light-style.css")) {
-            scene.getStylesheets().add(ControllerHelper.class.getResource("css/help-light-style.css").toExternalForm());
-        } else {
-            scene.getStylesheets().add(ControllerHelper.class.getResource("css/help-dark-style.css").toExternalForm());
-        }
-
-        LibMeScrapper.getHelpStage().setTitle("Справка");
-        LibMeScrapper.getHelpStage().setMinHeight(450.0);
-        LibMeScrapper.getHelpStage().setMinWidth(375.0);
-
-        LibMeScrapper.getHelpStage().setScene(scene);
-        LibMeScrapper.getHelpStage().show();
-    }
-
 }
