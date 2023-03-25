@@ -4,7 +4,7 @@
     -fx-font-style: normal;
     src: url('../fonts/Roboto-Bold.ttf') format('truetype');
 }
-/*TODO ИЗМЕНИТЬ НА ДАРК!!!*/
+
 .root {
     -fx-font-family: 'Roboto-Bold', 'sans-serif';
     -fx-font-size: 1em;
@@ -12,7 +12,12 @@
     -fx-background-color: black;
 }
 
+.label {
+    -fx-text-fill: #d0d0d0;
+}
+
 .hyperlink {
+    -fx-text-fill: #4897fd;
     -fx-padding: 0 0 0 0;
     -fx-cursor: hand;
     -fx-border-color: transparent;
@@ -20,22 +25,22 @@
 
 #closeDialogButton {
     -fx-padding: 0px;
-    -fx-text-fill: #458636;
-    -fx-background-color: white;
+    -fx-text-fill: #42b028;
+    -fx-background-color: black;
     -fx-border-width: 1;
-    -fx-border-color: white white #589d47 white;
+    -fx-border-color: black black #3E932AFF black;
 }
 #closeDialogButton:hover {
     -fx-text-fill: white;
-    -fx-background-color: #589d47;
+    -fx-background-color: #3E932AFF;
     -fx-border-width: 1;
-    -fx-border-color: #589d47;
+    -fx-border-color: #3E932AFF;
     -fx-border-radius: 3px;
 }
 #closeDialogButton:pressed {
-    -fx-text-fill: #458636;
-    -fx-background-color: white;
+    -fx-text-fill: #42b028;
+    -fx-background-color: black;
     -fx-border-width: 1;
-    -fx-border-color: #589d47;
+    -fx-border-color: #3E932AFF;
     -fx-border-radius: 3px;
 }
