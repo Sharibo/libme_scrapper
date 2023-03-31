@@ -70,6 +70,13 @@
     -fx-border-width: 1;
     -fx-border-color: white white #589d47 white;
 }
+#getTableOfContentsButton:disabled {
+    -fx-padding: 0px;
+    -fx-text-fill: grey;
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-color: white white grey white;
+}
 #getTableOfContentsButton:hover {
     -fx-text-fill: white;
     -fx-background-color: #589d47;

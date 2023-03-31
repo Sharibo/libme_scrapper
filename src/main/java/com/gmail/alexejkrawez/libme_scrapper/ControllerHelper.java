@@ -5,24 +5,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +113,9 @@ public class ControllerHelper {
         if (tableOfContents != null && !tableOfContents.isEmpty()) {
             for (Chapter chapter : tableOfContents) {
                 Hyperlink url = new Hyperlink(chapter.getChapterLink());
+                Tooltip tooltip = new Tooltip(chapter.getChapterLink());
+                tooltip.setShowDelay(new Duration(700));
+                url.setTooltip(tooltip);
                 url.setText("url \u2B0F");
                 url.setOnAction(e -> {
                     url.setVisited(false);
@@ -158,7 +159,7 @@ public class ControllerHelper {
         }
 
         Pattern p = Pattern.compile("^https://ranobelib.me/[A-Za-z0-9-]+[/?].*$");
-        Matcher m = p.matcher(url.strip());
+        Matcher m = p.matcher(url);
         if (m.find()) {
             return true;
         } else {
