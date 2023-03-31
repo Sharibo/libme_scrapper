@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,9 @@ public class Parser {
             // little spruces 4
             {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}", "$1»»"},
     };
+    private static final int[] PAUSES = {150, 200, 250, 300, 350, 400};
+    private static final int PAUSES_LENGTH = PAUSES.length;
+    private static final Random RANDOM = new Random();
 
 
     protected static List<Chapter> getTableOfContents(String url) {
@@ -178,7 +182,7 @@ public class Parser {
                     .userAgent("Mozilla/5.0")
                     .get();
             Elements data = document.select(CHAPTER_CONTAINER).get(0).children();
-            data.forEach(element -> parseData(element));
+            data.forEach(element -> {parseData(element); pause();});
         } catch (IOException e) {
             log.error(chapter.getChapterName() + e.getLocalizedMessage());
         }
@@ -211,6 +215,15 @@ public class Parser {
         }
 
         return trimmedText;
+    }
+
+    private static void pause() {
+        try {
+            Thread.sleep( PAUSES[(RANDOM.nextInt(PAUSES_LENGTH))] );
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Error by Thread.sleep(): " + e.getLocalizedMessage());
+        }
     }
 
     protected static void saveDocument(String pathToSave, Label footerLabel) {
