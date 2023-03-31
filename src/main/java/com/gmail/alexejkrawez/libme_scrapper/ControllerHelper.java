@@ -106,9 +106,8 @@ public class ControllerHelper {
         }
     }
 
-    protected static void showChapters(List<Chapter> tableOfContents,
-                                       TableView<TableRow> tableView,
-                                       Label footerLabel) {
+    protected static int showChapters(List<Chapter> tableOfContents,
+                                       TableView<TableRow> tableView) {
 
         if (tableOfContents != null && !tableOfContents.isEmpty()) {
             for (Chapter chapter : tableOfContents) {
@@ -135,9 +134,9 @@ public class ControllerHelper {
             FXCollections.reverse(tableListReversed);
 
             tableView.getItems().setAll(tableList);
-            footerLabel.setText("Оглавление загружено. Всего глав: " + tableList.size());
         }
 
+        return tableList.size();
     }
 
     protected static List<Chapter> getCheckedChapters(List<Chapter> tableOfContents) {

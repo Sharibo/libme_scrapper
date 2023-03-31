@@ -1,5 +1,6 @@
 package com.gmail.alexejkrawez.libme_scrapper;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,8 +17,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.*;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.checkPath;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.checkUrl;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.getCheckedChapters;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.initializeTableView;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.reverseTable;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.showChapters;
 
 public class Controller {
 
@@ -76,24 +83,54 @@ public class Controller {
     // TODO разбивать ли на тома с сохранением в отдельные файлы + возможно маска томов
     // TODO добавлять ли автора + можно перезаписать как зовут автора на кириллицу или что хочешь
     // TODO поле футера +
-    // TODO хелп с указанием автора и версии программы
+    // TODO хелп с указанием автора и версии программы +
     // TODO смена темы день/ночь +
 
     @FXML
     protected void getTableOfContents() {
         getTableOfContentsButton.setDisable(true);
 
-        String url = addLinkField.getText();
+        String url = addLinkField.getText().strip();
 
         if (checkUrl(url, footerLabel)) {
-            tableOfContents = Parser.getTableOfContents(url);
-//            tableOfContents = Parser.getTableOfContents("https://ranobelib.me/ascendance-of-a-bookworm-novel/v1/c2?bid=12002"); //TODO: затычка
-            showChapters(tableOfContents, tableView, footerLabel);
+            footerLabel.setText("Ожидайте, загружается оглавление...");
 
-            setEnable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
+            CompletableFuture.supplyAsync(() -> Parser.getTableOfContents(url))
+                    .whenComplete((tableOfContents, throwable) -> {
+                        if (throwable == null) {
+                            int chapters = showChapters(tableOfContents, tableView);
+                            setFooterLabelAsync("Оглавление загружено. Всего глав: " + chapters);
+                            setTableOfContentsAsync(tableOfContents);
+                            setEnable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
+                        } else {
+                            log.error("Slave thread failed: " + throwable.getLocalizedMessage());
+                            setFooterLabelAsync("Возникла ошибка при загрузке!");
+                        }
+
+                        getTableOfContentsButton.setDisable(false);
+                    }); // non-blocking
+        } else {
+            getTableOfContentsButton.setDisable(false);
         }
 
-        getTableOfContentsButton.setDisable(false);
+    }
+
+    private void setFooterLabelAsync(String source) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                footerLabel.setText(source);
+            }
+        });
+    }
+
+    private void setTableOfContentsAsync(List<Chapter> source) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tableOfContents = source;
+            }
+        });
     }
 
     @FXML
