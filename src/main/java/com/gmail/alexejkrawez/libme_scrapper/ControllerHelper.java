@@ -107,34 +107,39 @@ public class ControllerHelper {
     }
 
     protected static int showChapters(List<Chapter> tableOfContents,
-                                       TableView<TableRow> tableView) {
+                                      TableView<TableRow> tableView) {
 
-        if (tableOfContents != null && !tableOfContents.isEmpty()) {
-            for (Chapter chapter : tableOfContents) {
-                Hyperlink url = new Hyperlink(chapter.getChapterLink());
-                Tooltip tooltip = new Tooltip(chapter.getChapterLink());
-                tooltip.setShowDelay(new Duration(700));
-                url.setTooltip(tooltip);
-                url.setText("url \u2B0F");
-                url.setOnAction(e -> {
-                    url.setVisited(false);
-                    Desktop desktop = Desktop.getDesktop();
-                    try {
-                        desktop.browse(java.net.URI.create(chapter.getChapterLink()));
-                    } catch (IOException ex) {
-                        log.error("Error by opening chapter-url");
-                    }
-                });
-
-                TableRow tableRow = new TableRow(false, chapter.getChapterName(), url);
-                tableList.add(tableRow);
-            }
-
-            tableListReversed.setAll(tableList);
-            FXCollections.reverse(tableListReversed);
-
-            tableView.getItems().setAll(tableList);
+        isReversed = false;
+        if (!tableList.isEmpty()) {
+            tableList.clear();
         }
+
+        for (Chapter chapter : tableOfContents) {
+            Hyperlink url = new Hyperlink(chapter.getChapterLink());
+
+            Tooltip tooltip = new Tooltip(chapter.getChapterLink());
+            tooltip.setShowDelay(new Duration(700));
+            url.setTooltip(tooltip);
+
+            url.setText("url \u2B0F");
+            url.setOnAction(e -> {
+                url.setVisited(false);
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.browse(java.net.URI.create(chapter.getChapterLink()));
+                } catch (IOException ex) {
+                    log.error("Error by opening chapter-url");
+                }
+            });
+
+            TableRow tableRow = new TableRow(false, chapter.getChapterName(), url);
+            tableList.add(tableRow);
+        }
+
+        tableListReversed.setAll(tableList);
+        FXCollections.reverse(tableListReversed);
+
+        tableView.getItems().setAll(tableList);
 
         return tableList.size();
     }

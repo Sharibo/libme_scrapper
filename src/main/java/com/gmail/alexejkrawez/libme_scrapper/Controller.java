@@ -51,7 +51,7 @@ public class Controller {
     @FXML
     private FontIcon themeChangerIcon;
 
-    private static final Logger log = LoggerFactory.getLogger(Controller.class); // TODO если не нужен будет убрать
+    private static final Logger log = LoggerFactory.getLogger(Controller.class);
     private List<Chapter> tableOfContents;
 
     @FXML
@@ -94,6 +94,11 @@ public class Controller {
 
         if (checkUrl(url, footerLabel)) {
             footerLabel.setText("Ожидайте, загружается оглавление...");
+            setDisable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
+
+            if (tableOfContents != null && !tableOfContents.isEmpty()) {
+                tableOfContents.clear();
+            }
 
             CompletableFuture.supplyAsync(() -> Parser.getTableOfContents(url))
                     .whenComplete((tableOfContents, throwable) -> {
