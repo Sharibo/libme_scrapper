@@ -5,10 +5,7 @@ import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.Parts;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
-import org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart;
-import org.docx4j.openpackaging.parts.WordprocessingML.FontTablePart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart;
 import org.docx4j.wml.Br;
@@ -41,40 +38,23 @@ public class DocumentCreator {
 
     private static final Logger log = getLogger(DocumentCreator.class);
     private static WordprocessingMLPackage word;
-    private static Parts parts;
     private static MainDocumentPart document;
     private static ObjectFactory factory = Context.getWmlObjectFactory();
-    private static FontTablePart fonts;
     private static StyleDefinitionsPart styles;
-    private static P paragraph;
+    private static PPr titleProperties;
+    private static PPr chapterProperties;
     private static PPr paragraphProperties;
     private static PPr paragraphImageProperties;
-    private static PPr chapterProperties;
+    private static PPrBase.PStyle titleStyle;
     private static PPrBase.PStyle paragraphStyle;
     private static PPrBase.PStyle chapterStyle;
-    private static R wrapper;
-    private static Text text;
     private static RPr propertiesTitle;
     private static RPr propertiesChapter;
     private static RPr propertiesText;
-    private static Drawing drawing;
     private static Color color;
     private static int id1 = 1;
     private static int id2 = 2;
 
-//    public FontTablePart getFontTablePart();
-//    public StyleDefinitionsPart getStyleDefinitionsPart();
-//    public EndnotesPart getEndNotesPart();
-//    public DocumentSettingsPart getDocumentSettingsPart();
-//    RelationshipsPart rp = part.getRelationshipsPart();
-//    factory.createBr() //Page break
-
-
-    // Populate it with default styles
-//    stylesPart.unmarshalDefaultStyles();
-
-    // Add the styles part to the main document part relationships
-//    wordDocumentPart.addTargetPart(stylesPart);
 
     protected void createDocument(String title) {
         try {
@@ -85,15 +65,6 @@ public class DocumentCreator {
 
         document = word.getMainDocumentPart();
 
-//        parts = word.getParts();
-//        parts.put(fonts);
-//        parts.put(styles);
-
-
-
-
-
-
         // Lang
         CTLanguage language = new CTLanguage();
         language.setVal("ru-RU");
@@ -103,50 +74,47 @@ public class DocumentCreator {
         color = new Color();
         color.setVal("black");
         // Title style
-        setPropertiesStyle(propertiesTitle, "Title", BigInteger.valueOf(44), language);
+        setStyleSettings(propertiesTitle, "Title", BigInteger.valueOf(44), language);
         // Chapter Style
-        setPropertiesStyle(propertiesChapter, "Heading1", BigInteger.valueOf(32), language);
+        setStyleSettings(propertiesChapter, "Heading1", BigInteger.valueOf(32), language);
         // Normal style
-        setPropertiesStyle(propertiesText, "Normal", BigInteger.valueOf(24), language);
+        setStyleSettings(propertiesText, "Normal", BigInteger.valueOf(24), language);
 
         // Paragraphs
+        // Chapter paragraph
+        chapterProperties = factory.createPPr();
+        chapterStyle = factory.createPPrBasePStyle();
+        chapterStyle.setVal("Heading1");
+        chapterProperties.setPStyle(chapterStyle);
+
+        // Text and image paragraph
         paragraphProperties = factory.createPPr();
         paragraphImageProperties = factory.createPPr();
 
         paragraphStyle = factory.createPPrBasePStyle();
         paragraphStyle.setVal("Normal");
-        PPrBase.Ind firstLine = new PPrBase.Ind();
-        firstLine.setFirstLine(BigInteger.valueOf(284));
-        paragraphProperties.setInd(firstLine);
         paragraphProperties.setPStyle(paragraphStyle);
+
         Jc justificationLeft = factory.createJc();
         justificationLeft.setVal(JcEnumeration.LEFT);
         paragraphProperties.setJc(justificationLeft);
+
         Jc justificationCenter = factory.createJc();
         justificationCenter.setVal(JcEnumeration.CENTER);
         paragraphImageProperties.setJc(justificationCenter);
 
+        // Title paragraph
+        titleProperties = factory.createPPr();
+        titleStyle = factory.createPPrBasePStyle();
+        titleStyle.setVal("Title");
+        titleProperties.setPStyle(titleStyle);
+        titleProperties.setJc(justificationCenter);
 
-        chapterProperties = factory.createPPr();;
-        chapterStyle = factory.createPPrBasePStyle();
-        chapterStyle.setVal("Heading1");
-        chapterProperties.setPStyle(chapterStyle);
-
-
-//        wrapper = factory.createR();
-//        text = factory.createText();
-//        drawing = factory.createDrawing();
-//        propertiesText = factory.createRPr();
-//        propertiesText.setLang(language);
-//        color = factory.createColor();
-
-
-
-        document.addStyledParagraphOfText("Title", title);
+        addTitle(title);
         // mainDocumentPart > paragraph + paragraphProperties > wrapper > text + drawing + (propertiesText > color + B + I + U + caps)
     }
 
-    private static void setPropertiesStyle(RPr properties, String styleName, BigInteger fontSize, CTLanguage language) {
+    private static void setStyleSettings(RPr properties, String styleName, BigInteger fontSize, CTLanguage language) {
         Style style = styles.getStyleById(styleName);
         HpsMeasure hpsMeasureTitle = new HpsMeasure();
         hpsMeasureTitle.setVal(fontSize);
@@ -249,21 +217,16 @@ public class DocumentCreator {
         document.getContent().add(paragraph);
     }
 
-//    private void style() {
-//        text.setValue("Welcome To Baeldung");
-//        wrapper.getContent().add(text);
-//        paragraph.getContent().add(wrapper);
-//
-//        BooleanDefaultTrue b = new BooleanDefaultTrue(); //TODO ???
-//        propertiesText.setB(b);
-//        propertiesText.setI(b);
-//        propertiesText.setCaps(b);
-//        color.setVal("green");
-//        propertiesText.setColor(color);
-//
-//        wrapper.setRPr(propertiesText);
-//        document.getContent().add(paragraph); //TODO: разнести здесь всё определение и наполнение
-//    }
+    protected void addTitle(String title) {
+        P paragraph = factory.createP();
+        paragraph.setPPr(titleProperties);
+        R wrapper = factory.createR();
+        Text text = factory.createText();
 
+        text.setValue(title);
+        wrapper.getContent().add(text);
+        paragraph.getContent().add(wrapper);
+        document.getContent().add(paragraph);
+    }
 
 }

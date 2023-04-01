@@ -150,3 +150,55 @@
 //        } catch (Docx4JException e) {
 //        log.error(e.getLocalizedMessage());
 //        }
+
+
+//        PPrBase.Ind firstLine = new PPrBase.Ind();
+//        firstLine.setFirstLine(BigInteger.valueOf(284));
+//        paragraphProperties.setInd(firstLine);
+
+
+//        wrapper = factory.createR();
+//        text = factory.createText();
+//        drawing = factory.createDrawing();
+//        propertiesText = factory.createRPr();
+//        propertiesText.setLang(language);
+//        color = factory.createColor();
+
+
+//        parts = word.getParts();
+//        parts.put(fonts);
+//        parts.put(styles);
+
+
+
+//    private void style() {
+//        text.setValue("Welcome To Baeldung");
+//        wrapper.getContent().add(text);
+//        paragraph.getContent().add(wrapper);
+//
+//        BooleanDefaultTrue b = new BooleanDefaultTrue();
+//        propertiesText.setB(b);
+//        propertiesText.setI(b);
+//        propertiesText.setCaps(b);
+//        color.setVal("green");
+//        propertiesText.setColor(color);
+//
+//        wrapper.setRPr(propertiesText);
+//        document.getContent().add(paragraph);
+//    }
+
+
+
+//    public FontTablePart getFontTablePart();
+//    public StyleDefinitionsPart getStyleDefinitionsPart();
+//    public EndnotesPart getEndNotesPart();
+//    public DocumentSettingsPart getDocumentSettingsPart();
+//    RelationshipsPart rp = part.getRelationshipsPart();
+//    factory.createBr() //Page break
+
+
+// Populate it with default styles
+//    stylesPart.unmarshalDefaultStyles();
+
+// Add the styles part to the main document part relationships
+//    wordDocumentPart.addTargetPart(stylesPart);
