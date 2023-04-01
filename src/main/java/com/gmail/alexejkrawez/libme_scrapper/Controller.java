@@ -4,8 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -74,16 +74,16 @@ public class Controller {
 
     }
 
-    // TODO интерфейс
+    // TODO интерфейс +/-
     // TODO поле для ввода ссылки +
     // TODO поле ввода пути для сохранения + кнопка выбрать папку сохранения (запоминается в файлик настроек) +
-    // TODO поле с таблицей / список глав + галочками + ссылкой на главу + на эскейт снятие галок со всех глав? +/-
+    // TODO поле с таблицей / список глав + галочками + ссылкой на главу +
     // TODO отметка всех глав / снятие выделения +
     // TODO отметка части глав +
     // TODO разбивать ли на тома с сохранением в отдельные файлы + возможно маска томов
     // TODO добавлять ли автора + можно перезаписать как зовут автора на кириллицу или что хочешь
     // TODO поле футера +
-    // TODO хелп с указанием автора и версии программы +
+    // TODO хелп с указанием автора и версии программы +/-
     // TODO смена темы день/ночь +
 
     @FXML
@@ -108,7 +108,7 @@ public class Controller {
                             setTableOfContentsAsync(tableOfContents);
                             setEnable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
                         } else {
-                            log.error("Slave thread failed: " + throwable.getLocalizedMessage());
+                            log.error("getTableOfContents() - slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Возникла ошибка при загрузке!");
                         }
 
@@ -159,21 +159,34 @@ public class Controller {
 
     @FXML
     protected void saveToLocal() {
-        setDisable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton);
-        String pathToSave = savePathField.getText();
+        setDisable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+                   globalCheckbox, reverseTableShowButton, tableView);
+
+        String pathToSave = savePathField.getText().strip();
 
         // получение и проверка пути сохранения
         if (checkPath(pathToSave, footerLabel)) {
-            // извлечение выделения / галочек
-            List<Chapter> checkedChapters = getCheckedChapters(tableOfContents);
-            // получение данных
-            Parser.getData(checkedChapters);
-            // и сохранение
-            Parser.saveDocument(pathToSave, footerLabel);
-            // TODO + сделать анимацию что такая-то глава загрузилась? Новый поток?
+
+            CompletableFuture.supplyAsync(() -> getCheckedChapters(tableOfContents))
+                    .whenComplete((checkedChapters, throwable) -> {
+                        if (throwable == null) {
+                            Parser.getData(checkedChapters);
+                        } else if (throwable.getCause() instanceof IllegalArgumentException) {
+                            log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
+                            setFooterLabelAsync("Не выделено ни одной главы для сохранения!");
+                        } else {
+                            log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
+                            setFooterLabelAsync("Возникла ошибка при обработке глав!");
+                        }
+                    })
+                    .thenAccept(ok -> {
+                        Parser.saveDocument(pathToSave, footerLabel);
+                    })
+                    .whenComplete((ok, throwable) -> setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+                            globalCheckbox, reverseTableShowButton, tableView)); // non-blocking
+
         }
-        // TODO возможно остальные кнопки тоже блокировать
-        setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton);
+
     }
 
 
@@ -228,14 +241,14 @@ public class Controller {
 
 
 
-    private void setEnable(ButtonBase... items) {
-        for (ButtonBase item : items) {
+    private void setEnable(Control... items) {
+        for (Control item : items) {
             item.setDisable(false);
         }
     }
 
-    private void setDisable(ButtonBase... items) {
-        for (ButtonBase item : items) {
+    private void setDisable(Control... items) {
+        for (Control item : items) {
             item.setDisable(true);
         }
     }

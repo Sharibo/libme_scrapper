@@ -153,6 +153,11 @@ public class ControllerHelper {
             }
         }
 
+        if (chapters.isEmpty()) {
+            log.error("Zero checkboxes selected");
+            throw new IllegalArgumentException("Zero checkboxes selected");
+        }
+
         return chapters;
     }
 

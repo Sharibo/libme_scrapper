@@ -50,76 +50,76 @@ public class Parser {
             // quotes and dots 2
             {"\\.\\.([\"'‚‘‛’‟„“”‹›«»「」『』〈〉《》(){}\\[\\]])\\.", "...$1"},
             // little spruces 1
-            {"[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]([^\\u00A0\\s])", "«$1"},  // 「」『』〈〉《》 сомнительно
+            {"[\"'‚‘‛’‟„“”‹›«»]([^\\u00A0\\s])", "«$1"},  // 「」『』〈〉《》 сомнительно
             // little spruces 2
-            {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]", "$1»"},
+            {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»]", "$1»"},
             // little spruces 3
-            {"[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}([^\\u00A0\\s])", "««$1"},
+            {"[\"'‚‘‛’‟„“”‹›«»]{2}([^\\u00A0\\s])", "««$1"},
             // little spruces 4
-            {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»(){}\\[\\]]{2}", "$1»»"},
+            {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»]{2}", "$1»»"},
     };
-    private static final int[] PAUSES = {150, 200, 250, 300, 350, 400};
+    private static final int[] PAUSES = {50, 100, 150, 200, 250, 300};
     private static final int PAUSES_LENGTH = PAUSES.length;
     private static final Random RANDOM = new Random();
 
 
     protected static List<Chapter> getTableOfContents(String url) {
 
-//        if (isMainPageUrl(url)) {
-//            // get firstChapterUrl from main title page
-//            String firstChapterUrl = null;
-//            try {
-//                document = Jsoup.connect(url)
-//                        .userAgent("Mozilla/5.0")
-//                        .get();
-//                Element data = document.select(START_READING_BUTTON).get(0).children().get(1);
-//                firstChapterUrl = Optional.of(data.attr("href"))
-//                        .orElseThrow(() -> new RuntimeException("firstChapterUrl was not found!"));
-//            } catch (IOException e) {
-//                log.error(url + "\n" + e.getLocalizedMessage());
-//            }
-//
-//            url = firstChapterUrl;
-//        }
-//
-//        // create a browser
-//        EdgeOptions options = new EdgeOptions();
-//        options.addArguments("--headless=new");
-//        options.addArguments("--start-maximized");
-//        EdgeDriver driver = new EdgeDriver(options);
-//
-//        // get url from TextField
-//        driver.navigate().to(url);
-//
-//        // get table of contents
-//        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
-//        new Actions(driver).moveToElement(chaptersGetter).click().perform();
-//        List<WebElement> chaptersList = driver.findElements(By.className(CHAPTERS));
-//        List<Chapter> tableOfContents = new ArrayList<>(chaptersList.size());
-//        chaptersList.forEach(element ->
-//                tableOfContents.add(new Chapter(element.getText(), element.getAttribute("href")))
-//        );
-//        Collections.reverse(tableOfContents);
-//
-//        title = getTitleName(tableOfContents.get(0).getChapterLink());
-//
-//        log.info("Table of content downloaded successfully");
-//        driver.quit();
-        List<Chapter> tableOfContents = new ArrayList<>();
-        tableOfContents.add(new Chapter("Том 1 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 2 Глава 124 Нисхождение  небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 3 Глава 125 Нисхождение владыки  до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 4 Глава 126 Нисхождение владыки небес  земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 5 Глава 127 Нисхождение владыки небес до  и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 6 Глава 128 Нисхождение владыки небес до земли   обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 7 Глава 129 Нисхождение владыки небес до земли и восхождение ", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 8 Глава 130 владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 9 Глава 131 небес до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 10 Глава 132 Нисхождение до земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 11 Глава 133 Нисхождение владыки  земли и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 12 Глава 134 Нисхождение владыки небес  и восхождение обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 13 Глава 135 Нисхождение владыки небес до  обратно", "https://ranobelib.me/"));
-        tableOfContents.add(new Chapter("Том 14 Глава 136 Нисхождение владыки небес до земли", "https://ranobelib.me/"));
+        if (isMainPageUrl(url)) {
+            // get firstChapterUrl from main title page
+            String firstChapterUrl = null;
+            try {
+                Document document = Jsoup.connect(url)
+                        .userAgent("Mozilla/5.0")
+                        .get();
+                Element data = document.select(START_READING_BUTTON).get(0).children().get(1);
+                firstChapterUrl = Optional.of(data.attr("href"))
+                        .orElseThrow(() -> new RuntimeException("firstChapterUrl was not found!"));
+            } catch (IOException e) {
+                log.error(url + "\n" + e.getLocalizedMessage());
+            }
+
+            url = firstChapterUrl;
+        }
+
+        // create a browser
+        EdgeOptions options = new EdgeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--start-maximized");
+        EdgeDriver driver = new EdgeDriver(options);
+
+        // get url from TextField
+        driver.navigate().to(url);
+
+        // get table of contents
+        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
+        new Actions(driver).moveToElement(chaptersGetter).click().perform();
+        List<WebElement> chaptersList = driver.findElements(By.className(CHAPTERS));
+        List<Chapter> tableOfContents = new ArrayList<>(chaptersList.size());
+        chaptersList.forEach(element ->
+                tableOfContents.add(new Chapter(element.getText(), element.getAttribute("href")))
+        );
+        Collections.reverse(tableOfContents);
+
+        title = getTitleName(tableOfContents.get(0).getChapterLink());
+
+        log.info("Table of content downloaded successfully");
+        driver.quit();
+//        List<Chapter> tableOfContents = new ArrayList<>();
+//        tableOfContents.add(new Chapter("Том 1 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 2 Глава 124 Нисхождение  небес до земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 3 Глава 125 Нисхождение владыки  до земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 4 Глава 126 Нисхождение владыки небес  земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 5 Глава 127 Нисхождение владыки небес до  и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 6 Глава 128 Нисхождение владыки небес до земли   обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 7 Глава 129 Нисхождение владыки небес до земли и восхождение ", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 8 Глава 130 владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 9 Глава 131 небес до земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 10 Глава 132 Нисхождение до земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 11 Глава 133 Нисхождение владыки  земли и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 12 Глава 134 Нисхождение владыки небес  и восхождение обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 13 Глава 135 Нисхождение владыки небес до  обратно", "https://ranobelib.me/"));
+//        tableOfContents.add(new Chapter("Том 14 Глава 136 Нисхождение владыки небес до земли", "https://ranobelib.me/"));
         return tableOfContents;
     }
 
@@ -177,6 +177,7 @@ public class Parser {
             documentCreator.addChapterName(chapter.getChapterName());
             getChapter(chapter);
             documentCreator.addPageBreak();
+            pause();
         }
 
         // last chapter without page break
@@ -192,7 +193,7 @@ public class Parser {
                     .userAgent("Mozilla/5.0")
                     .get();
             Elements data = document.select(CHAPTER_CONTAINER).get(0).children();
-            data.forEach(element -> {parseData(element); pause();});
+            data.forEach(element -> parseData(element));
         } catch (IOException e) {
             log.error(chapter.getChapterName() + e.getLocalizedMessage());
         }
@@ -239,6 +240,8 @@ public class Parser {
     protected static void saveDocument(String pathToSave, Label footerLabel) {
         if (documentCreator.saveDocument(pathToSave, title)) {
             footerLabel.setText("Сохранено!");
+        } else {
+            footerLabel.setText("Возникла ошибка при сохранении!");
         }
     }
 

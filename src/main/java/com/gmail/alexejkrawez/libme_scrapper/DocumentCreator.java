@@ -54,7 +54,6 @@ public class DocumentCreator {
     private static Color color;
     private static int id1 = 1;
     private static int id2 = 2;
-    private static int count = 0;
 
 //    public FontTablePart getFontTablePart();
 //    public StyleDefinitionsPart getStyleDefinitionsPart();
@@ -124,7 +123,7 @@ public class DocumentCreator {
         } catch (Docx4JException e) {
             log.error(e.getLocalizedMessage());
         }
-        return false;
+        return true;
     }
 
     protected void addTextParagraph(String source) {
@@ -137,7 +136,6 @@ public class DocumentCreator {
         wrapper.getContent().add(text);
         paragraph.getContent().add(wrapper);
         document.getContent().add(paragraph);
-        log.info("paragraphs count " + ++count);
     }
 
     protected void addImgParagraph(String source) {
@@ -159,7 +157,6 @@ public class DocumentCreator {
         wrapper.getContent().add(drawing);
         paragraph.getContent().add(wrapper);
         document.getContent().add(paragraph);
-        log.info("paragraphs count " + ++count);
     }
 
     private Inline createImg(String source) throws Exception {
