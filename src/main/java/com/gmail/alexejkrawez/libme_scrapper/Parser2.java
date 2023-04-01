@@ -132,3 +132,21 @@
 //                Pattern.compile("\\.[\"”»]"),           // quotes1
 //                Pattern.compile("\\.\\.[\"”»]\\.")      // quotes2
 //        };
+
+
+/*      DOCUMENT CREATOR      */
+//DocumentSettingsPart documentSettings = document.getDocumentSettingsPart();
+//        try {
+//        documentSettings.getContents().setThemeFontLang(language);
+//        documentSettings.getContents().setHideGrammaticalErrors(new BooleanDefaultTrue());
+//        documentSettings.getContents().setHideSpellingErrors(new BooleanDefaultTrue());
+//
+//        DocDefaults.PPrDefault pPrDefault = new DocDefaults.PPrDefault();
+//        pPrDefault.setPPr(paragraphProperties);
+//
+//        DocDefaults.RPrDefault rPrDefault = new DocDefaults.RPrDefault();
+//        rPrDefault.setRPr(propertiesText);
+//        styles.getContents().getDocDefaults().setRPrDefault(rPrDefault);
+//        } catch (Docx4JException e) {
+//        log.error(e.getLocalizedMessage());
+//        }

@@ -7,12 +7,15 @@ import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Parts;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
+import org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.FontTablePart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart;
 import org.docx4j.wml.Br;
+import org.docx4j.wml.CTLanguage;
 import org.docx4j.wml.Color;
 import org.docx4j.wml.Drawing;
+import org.docx4j.wml.HpsMeasure;
 import org.docx4j.wml.Jc;
 import org.docx4j.wml.JcEnumeration;
 import org.docx4j.wml.ObjectFactory;
@@ -22,12 +25,14 @@ import org.docx4j.wml.PPrBase;
 import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
 import org.docx4j.wml.STBrType;
+import org.docx4j.wml.Style;
 import org.docx4j.wml.Text;
 import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URL;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -49,6 +54,8 @@ public class DocumentCreator {
     private static PPrBase.PStyle chapterStyle;
     private static R wrapper;
     private static Text text;
+    private static RPr propertiesTitle;
+    private static RPr propertiesChapter;
     private static RPr propertiesText;
     private static Drawing drawing;
     private static Color color;
@@ -72,27 +79,45 @@ public class DocumentCreator {
     protected void createDocument(String title) {
         try {
             word = WordprocessingMLPackage.createPackage();
-//            fonts = new FontTablePart();
-//            fonts.unmarshalDefaultFonts();
-//            styles = new StyleDefinitionsPart();
-//            Object o = styles.unmarshalDefaultStyles();
         } catch (InvalidFormatException e) {
             log.error(e.getLocalizedMessage());
         }
 
-        parts = word.getParts();
+        document = word.getMainDocumentPart();
+
+//        parts = word.getParts();
 //        parts.put(fonts);
 //        parts.put(styles);
-        document = word.getMainDocumentPart();
-        document.addStyledParagraphOfText("Title", title);
-        // mainDocumentPart > paragraph + paragraphProperties > wrapper > text + drawing + (propertiesText > color + B + I + U + caps)
 
+
+
+
+
+
+        // Lang
+        CTLanguage language = new CTLanguage();
+        language.setVal("ru-RU");
+
+        // Text styles
+        styles = document.getStyleDefinitionsPart();
+        color = new Color();
+        color.setVal("black");
+        // Title style
+        setPropertiesStyle(propertiesTitle, "Title", BigInteger.valueOf(44), language);
+        // Chapter Style
+        setPropertiesStyle(propertiesChapter, "Heading1", BigInteger.valueOf(32), language);
+        // Normal style
+        setPropertiesStyle(propertiesText, "Normal", BigInteger.valueOf(24), language);
+
+        // Paragraphs
         paragraphProperties = factory.createPPr();
         paragraphImageProperties = factory.createPPr();
-//        styles.getStyleById("Title").setPPr(paragraphProperties);
-//        document.getPropertyResolver().activateStyle("Normal");
+
         paragraphStyle = factory.createPPrBasePStyle();
         paragraphStyle.setVal("Normal");
+        PPrBase.Ind firstLine = new PPrBase.Ind();
+        firstLine.setFirstLine(BigInteger.valueOf(284));
+        paragraphProperties.setInd(firstLine);
         paragraphProperties.setPStyle(paragraphStyle);
         Jc justificationLeft = factory.createJc();
         justificationLeft.setVal(JcEnumeration.LEFT);
@@ -101,17 +126,36 @@ public class DocumentCreator {
         justificationCenter.setVal(JcEnumeration.CENTER);
         paragraphImageProperties.setJc(justificationCenter);
 
+
         chapterProperties = factory.createPPr();;
         chapterStyle = factory.createPPrBasePStyle();
         chapterStyle.setVal("Heading1");
         chapterProperties.setPStyle(chapterStyle);
-//        paragraph.setPPr(paragraphProperties);
+
 
 //        wrapper = factory.createR();
 //        text = factory.createText();
 //        drawing = factory.createDrawing();
 //        propertiesText = factory.createRPr();
+//        propertiesText.setLang(language);
 //        color = factory.createColor();
+
+
+
+        document.addStyledParagraphOfText("Title", title);
+        // mainDocumentPart > paragraph + paragraphProperties > wrapper > text + drawing + (propertiesText > color + B + I + U + caps)
+    }
+
+    private static void setPropertiesStyle(RPr properties, String styleName, BigInteger fontSize, CTLanguage language) {
+        Style style = styles.getStyleById(styleName);
+        HpsMeasure hpsMeasureTitle = new HpsMeasure();
+        hpsMeasureTitle.setVal(fontSize);
+        properties = factory.createRPr();
+        properties.setLang(language);
+        properties.setSz(hpsMeasureTitle);
+        properties.setSzCs(hpsMeasureTitle);
+        properties.setColor(color);
+        style.setRPr(properties);
     }
 
     protected boolean saveDocument(String pathToSave, String name) {
