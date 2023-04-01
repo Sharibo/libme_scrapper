@@ -65,7 +65,6 @@ public class Controller {
 
         initializeTableView(tableView, footerLabel);
 
-        // TODO вынести (глобальный чекбокс)
         globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             for (TableRow item : tableView.getItems()) {
                 item.checkboxProperty().set(newValue);
@@ -170,7 +169,10 @@ public class Controller {
             CompletableFuture.supplyAsync(() -> getCheckedChapters(tableOfContents))
                     .whenComplete((checkedChapters, throwable) -> {
                         if (throwable == null) {
-                            Parser.getData(checkedChapters);
+                            CompletableFuture.runAsync(() -> {
+                                Parser.getData(checkedChapters);
+                                setFooterLabelAsync( Parser.saveDocument(pathToSave) );
+                            });
                         } else if (throwable.getCause() instanceof IllegalArgumentException) {
                             log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Не выделено ни одной главы для сохранения!");
@@ -178,13 +180,18 @@ public class Controller {
                             log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Возникла ошибка при обработке глав!");
                         }
-                    })
-                    .thenAccept(ok -> {
-                        Parser.saveDocument(pathToSave, footerLabel);
-                    })
-                    .whenComplete((ok, throwable) -> setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                            globalCheckbox, reverseTableShowButton, tableView)); // non-blocking
+                        setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+                                globalCheckbox, reverseTableShowButton, tableView);
+                    });
+//                    .thenAccept(ok -> {
+//                        Parser.saveDocument(pathToSave);
+//                    })
+//                    .whenComplete((ok, throwable) -> setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+//                            globalCheckbox, reverseTableShowButton, tableView)); // non-blocking
 
+        } else {
+            setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+                      globalCheckbox, reverseTableShowButton, tableView);
         }
 
     }

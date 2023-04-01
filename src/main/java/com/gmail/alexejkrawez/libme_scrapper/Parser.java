@@ -237,11 +237,11 @@ public class Parser {
         }
     }
 
-    protected static void saveDocument(String pathToSave, Label footerLabel) {
+    protected static String saveDocument(String pathToSave) {
         if (documentCreator.saveDocument(pathToSave, title)) {
-            footerLabel.setText("Сохранено!");
+            return "Сохранено!";
         } else {
-            footerLabel.setText("Возникла ошибка при сохранении!");
+            return "Возникла ошибка при сохранении!";
         }
     }
 
