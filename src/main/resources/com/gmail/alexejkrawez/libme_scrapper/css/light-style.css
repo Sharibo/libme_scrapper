@@ -102,8 +102,14 @@
     -fx-border-width: 1 1 1 0;
     -fx-border-color: #167efa;
 }
+#setLocalPathButton:disabled {
+    -fx-opacity: 1.0;
+}
 #setLocalPathIcon:hover {
     -fx-fill: #167efa;
+}
+#setLocalPathIcon:disabled {
+    -fx-opacity: 0.4;
 }
 
 #saveToLocalButton {
@@ -153,10 +159,6 @@
 /*}*/
 /*.no-prompt {*/
 /*    -fx-prompt-text-fill: transparent;*/
-/*}*/
-
-/*#globalCheckbox {*/
-
 /*}*/
 
 /* tableView */

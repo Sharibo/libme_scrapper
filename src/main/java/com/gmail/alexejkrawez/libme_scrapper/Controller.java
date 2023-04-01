@@ -167,12 +167,10 @@ public class Controller {
         if (checkPath(pathToSave, footerLabel)) {
 
             CompletableFuture.supplyAsync(() -> getCheckedChapters(tableOfContents))
-                    .whenComplete((checkedChapters, throwable) -> {
+                    .whenCompleteAsync((checkedChapters, throwable) -> {
                         if (throwable == null) {
-                            CompletableFuture.runAsync(() -> {
-                                Parser.getData(checkedChapters);
-                                setFooterLabelAsync( Parser.saveDocument(pathToSave) );
-                            });
+                            Parser.getData(checkedChapters);
+                            setFooterLabelAsync( Parser.saveDocument(pathToSave) );
                         } else if (throwable.getCause() instanceof IllegalArgumentException) {
                             log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Не выделено ни одной главы для сохранения!");
@@ -182,13 +180,7 @@ public class Controller {
                         }
                         setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
                                 globalCheckbox, reverseTableShowButton, tableView);
-                    });
-//                    .thenAccept(ok -> {
-//                        Parser.saveDocument(pathToSave);
-//                    })
-//                    .whenComplete((ok, throwable) -> setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-//                            globalCheckbox, reverseTableShowButton, tableView)); // non-blocking
-
+                    }); // non-blocking
         } else {
             setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
                       globalCheckbox, reverseTableShowButton, tableView);

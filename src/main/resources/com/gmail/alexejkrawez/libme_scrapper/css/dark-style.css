@@ -104,11 +104,17 @@
     -fx-border-color: #4897fd;
     -fx-background-color: #1e1e1e;
 }
+#setLocalPathButton:disabled {
+    -fx-opacity: 1.0;
+}
 #setLocalPathIcon {
     -fx-fill: #d0d0d0;
 }
 #setLocalPathIcon:hover {
     -fx-fill: #4897fd;
+}
+#setLocalPathIcon:disabled {
+    -fx-opacity: 0.4;
 }
 
 #saveToLocalButton {
