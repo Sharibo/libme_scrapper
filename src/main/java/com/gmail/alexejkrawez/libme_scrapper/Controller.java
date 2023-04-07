@@ -9,8 +9,12 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +43,15 @@ public class Controller {
     @FXML
     private Button saveToLocalButton;
     @FXML
+    private HBox hBox3;
+    @FXML
     private CheckBox globalCheckbox;
     @FXML
     private Button reverseTableShowButton;
+    @FXML
+    private TextField nChaptersField;
+    @FXML
+    private ToggleButton isDividedByNChaptersButton;
     @FXML
     private TableView<TableRow> tableView;
     @FXML
@@ -52,6 +62,8 @@ public class Controller {
     private FontIcon themeChangerIcon;
 
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
+    private static boolean isDividedByNChapters = false;
+    private static int nChapters = 50;
     private List<Chapter> tableOfContents;
 
     @FXML
@@ -70,6 +82,14 @@ public class Controller {
                 item.checkboxProperty().set(newValue);
             }
         });
+
+        nChaptersField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 50, change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("([1-9][0-9]{0,3})?")) {
+                return change;
+            }
+            return null;
+        }));
 
     }
 
@@ -170,7 +190,7 @@ public class Controller {
                     .whenCompleteAsync((checkedChapters, throwable) -> {
                         if (throwable == null) {
                             Parser.getData(checkedChapters);
-                            setFooterLabelAsync( Parser.saveDocument(pathToSave) );
+                            setFooterLabelAsync( Parser.saveDocument(pathToSave) ); // TODO сделать флаги для N глав и томов
                         } else if (throwable.getCause() instanceof IllegalArgumentException) {
                             log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Не выделено ни одной главы для сохранения!");
@@ -194,6 +214,28 @@ public class Controller {
         reverseTable(tableView, footerLabel);
     }
 
+    @FXML
+    protected void isDividedByVolumesChapters() {
+    }
+
+    @FXML
+    protected void isDividedByNChapters() {
+
+        if(isDividedByNChaptersButton.isSelected()) {
+            String text = nChaptersField.getText();
+            if (!text.isBlank()) {
+                isDividedByNChapters = true;
+                nChapters = Integer.parseInt(text);
+            } else {
+                return; // TODO ругаться
+            }
+            hBox3.getChildren().remove(nChaptersField);
+        } else {
+            nChaptersField = new TextField();
+            hBox3.getChildren().add(nChaptersField); // TODO сделать нормально
+//            nChaptersField.setEditable(true);
+        }
+    }
 
 
 //    @FXML

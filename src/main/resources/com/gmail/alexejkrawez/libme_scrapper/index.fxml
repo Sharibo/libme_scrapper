@@ -11,6 +11,7 @@
 
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.ToggleButton?>
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:id="anchorPane"
@@ -72,7 +73,7 @@
                    maxHeight="28.0"
                    HBox.hgrow="ALWAYS"
                    promptText="Путь для сохранения"
-                   accessibleText="addLinkField">
+                   accessibleText="savePathField">
             <HBox.margin>
                 <Insets bottom="2.0"
                         left="2.0"/>
@@ -158,6 +159,61 @@
                 <Tooltip showDelay="700ms" text="Отображение глав в прямом или обратном порядке"/>
             </tooltip>
         </Button>
+
+        <ToggleButton fx:id="isDividedByVolumesButton"
+                      alignment="CENTER"
+                      contentDisplay="CENTER"
+                      minWidth="28.0"
+                      maxWidth="28.0"
+                      minHeight="28.0"
+                      maxHeight="28.0"
+                      onAction="#isDividedByVolumesChapters"
+                      disable="false">
+            <HBox.margin>
+                <Insets bottom="2.0"
+                        right="2.0"/>
+            </HBox.margin>
+            <graphic>
+                <FontIcon fx:id="isDividedByVolumesIcon" iconLiteral="fltfmz-text-direction-vertical-24" iconSize="24"/>
+            </graphic>
+            <tooltip>
+                <Tooltip showDelay="700ms" text="Сохранение в отдельные файлы по томам"/>
+            </tooltip>
+        </ToggleButton>
+
+        <ToggleButton fx:id="isDividedByNChaptersButton"
+                      alignment="CENTER"
+                      contentDisplay="CENTER"
+                      minWidth="28.0"
+                      maxWidth="28.0"
+                      minHeight="28.0"
+                      maxHeight="28.0"
+                      onAction="#isDividedByNChapters"
+                      disable="false">
+            <HBox.margin>
+                <Insets bottom="2.0"
+                        right="2.0"/>
+            </HBox.margin>
+            <graphic>
+                <FontIcon fx:id="isDividedByNChaptersIcon" iconLiteral="fltfmz-text-direction-vertical-24" iconSize="24"/>
+            </graphic>
+            <tooltip>
+                <Tooltip showDelay="700ms" text="Сохранение в отдельные файлы по указанному количеству глав"/>
+            </tooltip>
+        </ToggleButton>
+        <TextField fx:id="nChaptersField"
+                   alignment="CENTER"
+                   minWidth="48"
+                   maxWidth="48"
+                   minHeight="28.0"
+                   maxHeight="28.0"
+                   HBox.hgrow="ALWAYS"
+                   accessibleText="nChaptersField">
+            <HBox.margin>
+                <Insets bottom="2.0"
+                        left="2.0"/>
+            </HBox.margin>
+        </TextField>
 
     </HBox>
 
