@@ -1,7 +1,10 @@
 package com.gmail.alexejkrawez.libme_scrapper;
 
+import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -62,8 +65,9 @@ public class Controller {
     private FontIcon themeChangerIcon;
 
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
-    private static boolean isDividedByNChapters = false;
-    private static int nChapters = 50;
+    private boolean isDividedByVolumes = false;
+    private boolean isDividedByNChapters = false;
+    private int nChapters = 50;
     private List<Chapter> tableOfContents;
 
     @FXML
@@ -75,7 +79,7 @@ public class Controller {
             themeChangerIcon.setIconLiteral("fltfmz-weather-sunny-20");
         }
 
-        initializeTableView(tableView, footerLabel);
+        initializeTableView(tableView);
 
         globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             for (TableRow item : tableView.getItems()) {
@@ -83,7 +87,16 @@ public class Controller {
             }
         });
 
-        nChaptersField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 50, change -> {
+        nChaptersField = new TextField();
+        hBox3.setMargin(nChaptersField, new Insets(0.0, 0.0, 2.0, 2.0));
+        nChaptersField.setId("nChaptersField");
+        nChaptersField.setAlignment(Pos.CENTER);
+        nChaptersField.setMaxHeight(28.0);
+        nChaptersField.setMinHeight(28.0);
+        nChaptersField.setMaxWidth(48.0);
+        nChaptersField.setMinWidth(48.0);
+        nChaptersField.setAccessibleText("nChaptersField");
+        nChaptersField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), nChapters, change -> {
             String newText = change.getControlNewText();
             if (newText.matches("([1-9][0-9]{0,3})?")) {
                 return change;
@@ -139,24 +152,6 @@ public class Controller {
 
     }
 
-    private void setFooterLabelAsync(String source) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                footerLabel.setText(source);
-            }
-        });
-    }
-
-    private void setTableOfContentsAsync(List<Chapter> source) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                tableOfContents = source;
-            }
-        });
-    }
-
     @FXML
     public void setLocalPath() {
         final DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -189,8 +184,32 @@ public class Controller {
             CompletableFuture.supplyAsync(() -> getCheckedChapters(tableOfContents))
                     .whenCompleteAsync((checkedChapters, throwable) -> {
                         if (throwable == null) {
-                            Parser.getData(checkedChapters);
-                            setFooterLabelAsync( Parser.saveDocument(pathToSave) ); // TODO сделать флаги для N глав и томов
+
+                            if (isDividedByVolumes & isDividedByNChapters) {
+
+                            } else if (isDividedByVolumes) {
+
+                            } else if (isDividedByNChapters) {
+                                String n = nChaptersField.getText();
+                                if (!n.isBlank()) {
+                                    isDividedByNChapters = true;
+                                    nChapters = Integer.parseInt(n);
+                                } else {
+                                    return; // TODO ругаться
+                                }
+
+                                List<List<Chapter>> parts = Lists.partition(checkedChapters, nChapters);
+
+                                for (int i = 0, size = parts.size(); i < size; i++) {
+
+                                    Parser.getData(parts.get(i), i + 1);
+                                    setFooterLabelAsync(Parser.saveDocument(pathToSave, i + 1));
+                                }
+                            } else {
+                                Parser.getData(checkedChapters);
+                                setFooterLabelAsync(Parser.saveDocument(pathToSave));
+                            }
+
                         } else if (throwable.getCause() instanceof IllegalArgumentException) {
                             log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Не выделено ни одной главы для сохранения!");
@@ -201,12 +220,15 @@ public class Controller {
                         setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
                                 globalCheckbox, reverseTableShowButton, tableView);
                     }); // non-blocking
+
+
         } else {
             setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
                       globalCheckbox, reverseTableShowButton, tableView);
         }
 
     }
+
 
 
     @FXML
@@ -222,36 +244,15 @@ public class Controller {
     protected void isDividedByNChapters() {
 
         if(isDividedByNChaptersButton.isSelected()) {
-            String text = nChaptersField.getText();
-            if (!text.isBlank()) {
-                isDividedByNChapters = true;
-                nChapters = Integer.parseInt(text);
-            } else {
-                return; // TODO ругаться
-            }
-            hBox3.getChildren().remove(nChaptersField);
+            isDividedByNChapters = true;
+            hBox3.getChildren().add(nChaptersField);
         } else {
-            nChaptersField = new TextField();
-            hBox3.getChildren().add(nChaptersField); // TODO сделать нормально
-//            nChaptersField.setEditable(true);
+            isDividedByNChapters = false;
+            hBox3.getChildren().remove(nChaptersField);
         }
     }
 
 
-//    @FXML
-//    protected void saveToLocal() {
-//
-//    }
-
-//    @FXML
-//    protected void checkAll() {
-//        TableColumn<TableRow, ?> tableRowTableColumn = tableView.getColumns().get(0);
-//        globalCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-//            for (TableRow item : tableView.getItems()) {
-//                item.checkboxProperty().set(newValue);
-//            }
-//        });
-//    }
 
     @FXML
     protected void getAbout() {
@@ -281,6 +282,23 @@ public class Controller {
 
 
 
+    private void setFooterLabelAsync(String source) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                footerLabel.setText(source);
+            }
+        });
+    }
+
+    private void setTableOfContentsAsync(List<Chapter> source) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tableOfContents = source;
+            }
+        });
+    }
 
     private void setEnable(Control... items) {
         for (Control item : items) {

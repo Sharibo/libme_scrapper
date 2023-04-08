@@ -1,6 +1,5 @@
 package com.gmail.alexejkrawez.libme_scrapper;
 
-import javafx.scene.control.Label;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -164,6 +163,13 @@ public class Parser {
         getChapters(checkedChapters);
     }
 
+    protected static void getData(List<Chapter> checkedChapters, int nChaptersPart) {
+        // get chapters
+        documentCreator = new DocumentCreator();
+        documentCreator.createDocument("%s - часть %s".formatted(title, nChaptersPart));
+        getChapters(checkedChapters);
+    }
+
     // to index is included
     private static void getChapters(List<Chapter> checkedChapters) {
 //        List<Chapter> chapters = tableOfContents;
@@ -238,6 +244,22 @@ public class Parser {
     }
 
     protected static String saveDocument(String pathToSave) {
+        if (documentCreator.saveDocument(pathToSave, title)) {
+            return "Сохранено!";
+        } else {
+            return "Возникла ошибка при сохранении!";
+        }
+    }
+
+    protected static String saveDocument(String pathToSave, int nChaptersPart) {
+        if (documentCreator.saveDocument(pathToSave, "%s - часть %s".formatted(title, nChaptersPart))) {
+            return "Сохранена часть " + nChaptersPart + "!";
+        } else {
+            return "Возникла ошибка при сохранении!";
+        }
+    }
+
+    protected static String saveDocument(String pathToSave, boolean isDividedByVolumes, boolean isDividedByNChapters) {
         if (documentCreator.saveDocument(pathToSave, title)) {
             return "Сохранено!";
         } else {

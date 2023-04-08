@@ -148,6 +148,9 @@
 
 
 /* toolbar */
+#hBox3 .button:pressed {
+    -fx-border-color: #aaaaaa;
+}
 #hBox3 .button .ikonli-font-icon {
     -fx-fill: #aaaaaa;
 }
@@ -160,8 +163,36 @@
 #hBox3 .button:pressed .ikonli-font-icon {
     -fx-fill: #aaaaaa;
 }
-#hBox3 .button:pressed {
-    -fx-border-color: #aaaaaa;
+
+#hBox3 .toggle-button {
+    -fx-text-fill: #42b028;
+    -fx-border-radius: 3px;
+    -fx-background-color: black;
+    -fx-padding: 0px;
+}
+#hBox3 .toggle-button:hover {
+    -fx-border-color: #4897fd;
+}
+#hBox3 .toggle-button:pressed, #hBox3 .toggle-button:selected:pressed {
+    -fx-border-color: #167efa;
+}
+#hBox3 .toggle-button:selected {
+    -fx-border-color: #4897fd;
+}
+#hBox3 .toggle-button .ikonli-font-icon {
+    -fx-fill: #aaaaaa;
+}
+#hBox3 .toggle-button:disabled .ikonli-font-icon {
+    -fx-fill: white;
+}
+#hBox3 .toggle-button:hover .ikonli-font-icon {
+    -fx-fill: #4897fd;
+}
+#hBox3 .toggle-button:pressed .ikonli-font-icon, #hBox3 .toggle-button:selected:pressed .ikonli-font-icon {
+    -fx-fill: #337324;
+}
+#hBox3 .toggle-button:selected .ikonli-font-icon {
+    -fx-fill: #3E932AFF;
 }
 
 
@@ -172,7 +203,7 @@
     -fx-min-height: 0;
 }
 
-#table-view {
+#tableView {
     -fx-font-family: 'RobotoCondensed-Light', 'sans-serif';
     -fx-font-weight: bold;
     -fx-focus-color: transparent;
@@ -236,10 +267,10 @@
     -fx-background-color: mark-color;
 }
 
-#checkbox-column {
+#checkboxColumn {
     -fx-alignment: center;
 }
-#name-column {
+#nameColumn {
     -fx-alignment: center-left;
 }
 .hyperlink {
@@ -247,7 +278,7 @@
     -fx-cursor: hand;
     -fx-border-color: transparent;
 }
-#url-column {
+#urlColumn {
     -fx-alignment: center;
 }
 

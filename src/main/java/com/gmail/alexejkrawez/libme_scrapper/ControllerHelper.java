@@ -11,12 +11,15 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 
 import java.awt.*;
@@ -38,8 +41,8 @@ public class ControllerHelper {
     private static ObservableList<Integer> selectedIndices;
 
 
-    protected static void initializeTableView(TableView<TableRow> tableView, Label footerLabel) {
-        tableView.setId("table-view");
+    protected static void initializeTableView(TableView<TableRow> tableView) {
+        tableView.setId("tableView");
         tableView.getStyleClass().add("noheader");
         tableView.setEditable(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -54,18 +57,18 @@ public class ControllerHelper {
                 return cell;
             }
         } );
-        checkboxColumn.setId("checkbox-column");
+        checkboxColumn.setId("checkboxColumn");
         checkboxColumn.setMinWidth(32.0);
         checkboxColumn.setMaxWidth(32.0);
 
 
         TableColumn<TableRow, String> nameColumn = new TableColumn<>("Содержание");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        nameColumn.setId("name-column");
+        nameColumn.setId("nameColumn");
 
         TableColumn<TableRow, Hyperlink> urlColumn = new TableColumn<>();
         urlColumn.setCellValueFactory(new PropertyValueFactory<>("url"));
-        urlColumn.setId("url-column");
+        urlColumn.setId("urlColumn");
         urlColumn.setMinWidth(48.0);
         urlColumn.setMaxWidth(48.0);
 
@@ -87,7 +90,7 @@ public class ControllerHelper {
 
     }
 
-    static class CheckboxMouseClickEventHandler implements EventHandler<MouseEvent> {
+    protected static class CheckboxMouseClickEventHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent t) {
             TableCell c = (TableCell) t.getSource();

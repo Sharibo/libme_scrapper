@@ -174,7 +174,9 @@
                         right="2.0"/>
             </HBox.margin>
             <graphic>
-                <FontIcon fx:id="isDividedByVolumesIcon" iconLiteral="fltfmz-text-direction-vertical-24" iconSize="24"/>
+                <FontIcon fx:id="isDividedByVolumesIcon" iconLiteral="fltral-column-triple-24" iconSize="24"/>
+<!--                <FontIcon fx:id="isDividedByVolumesIcon" iconLiteral="fltrmz-text-word-count-24" iconSize="24"/>-->
+<!--                <FontIcon fx:id="isDividedByVolumesIcon" iconLiteral="fltral-book-open-24" iconSize="24"/>-->
             </graphic>
             <tooltip>
                 <Tooltip showDelay="700ms" text="Сохранение в отдельные файлы по томам"/>
@@ -195,25 +197,25 @@
                         right="2.0"/>
             </HBox.margin>
             <graphic>
-                <FontIcon fx:id="isDividedByNChaptersIcon" iconLiteral="fltfmz-text-direction-vertical-24" iconSize="24"/>
+                <FontIcon fx:id="isDividedByNChaptersIcon" iconLiteral="fltral-document-page-number-24" iconSize="24"/>
+<!--                <FontIcon fx:id="isDividedByNChaptersIcon" iconLiteral="fltrmz-text-number-list-ltr-24" iconSize="24"/>-->
             </graphic>
             <tooltip>
                 <Tooltip showDelay="700ms" text="Сохранение в отдельные файлы по указанному количеству глав"/>
             </tooltip>
         </ToggleButton>
-        <TextField fx:id="nChaptersField"
-                   alignment="CENTER"
-                   minWidth="48"
-                   maxWidth="48"
-                   minHeight="28.0"
-                   maxHeight="28.0"
-                   HBox.hgrow="ALWAYS"
-                   accessibleText="nChaptersField">
-            <HBox.margin>
-                <Insets bottom="2.0"
-                        left="2.0"/>
-            </HBox.margin>
-        </TextField>
+<!--        <TextField fx:id="nChaptersField"-->
+<!--                   alignment="CENTER"-->
+<!--                   minWidth="48.0"-->
+<!--                   maxWidth="48.0"-->
+<!--                   minHeight="28.0"-->
+<!--                   maxHeight="28.0"-->
+<!--                   accessibleText="nChaptersField">-->
+<!--            <HBox.margin>-->
+<!--                <Insets bottom="2.0"-->
+<!--                        left="2.0"/>-->
+<!--            </HBox.margin>-->
+<!--        </TextField>-->
 
     </HBox>
 
