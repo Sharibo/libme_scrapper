@@ -195,7 +195,10 @@ public class Controller {
                                     isDividedByNChapters = true;
                                     nChapters = Integer.parseInt(n);
                                 } else {
-                                    return; // TODO ругаться
+                                    setFooterLabelAsync("Не указано число глав для разделения на части!");
+                                    setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+                                              globalCheckbox, reverseTableShowButton, tableView);
+                                    return;
                                 }
 
                                 List<List<Chapter>> parts = Lists.partition(checkedChapters, nChapters);
