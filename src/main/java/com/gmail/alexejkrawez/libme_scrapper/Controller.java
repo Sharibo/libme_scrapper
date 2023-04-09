@@ -192,6 +192,33 @@ public class Controller {
                         if (throwable == null) {
 
                             if (isDividedByVolumes & isDividedByNChapters) {
+                                String n = nChaptersField.getText();
+
+                                if (!n.isBlank()) {
+                                    nChapters = Integer.parseInt(n);
+                                } else {
+                                    setFooterLabelAsync("Не указано число глав для разделения на части!");
+                                    setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
+                                              globalCheckbox, reverseTableShowButton, tableView);
+                                    return;
+                                }
+
+                                Map<String, ArrayList<Chapter>> map = checkVolumes(checkedChapters);
+                                Set<String> volumeNumbers = map.keySet();
+
+                                for (String volumeNumber : volumeNumbers) {
+                                    List<List<Chapter>> parts = Lists.partition(map.get(volumeNumber), nChapters);
+
+                                    if (parts.size() == 1) {
+                                        Parser.getData(map.get(volumeNumber), volumeNumber);
+                                        setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber));
+                                    } else {
+                                        for (int i = 0, size = parts.size(); i < size; i++) {
+                                            Parser.getData(parts.get(i), volumeNumber, i + 1);
+                                            setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber, i + 1));
+                                        }
+                                    }
+                                }
 
                             } else if (isDividedByVolumes) {
                                 Map<String, ArrayList<Chapter>> map = checkVolumes(checkedChapters);
@@ -206,7 +233,6 @@ public class Controller {
                                 String n = nChaptersField.getText();
 
                                 if (!n.isBlank()) {
-                                    isDividedByNChapters = true;
                                     nChapters = Integer.parseInt(n);
                                 } else {
                                     setFooterLabelAsync("Не указано число глав для разделения на части!");
@@ -218,7 +244,6 @@ public class Controller {
                                 List<List<Chapter>> parts = Lists.partition(checkedChapters, nChapters);
 
                                 for (int i = 0, size = parts.size(); i < size; i++) {
-
                                     Parser.getData(parts.get(i), i + 1);
                                     setFooterLabelAsync(Parser.saveDocument(pathToSave, i + 1));
                                 }
@@ -237,7 +262,7 @@ public class Controller {
                             setFooterLabelAsync("Возникла ошибка при обработке глав!");
                         }
                         setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                                globalCheckbox, reverseTableShowButton, tableView);
+                                  globalCheckbox, reverseTableShowButton, tableView);
                     }); // non-blocking
 
 

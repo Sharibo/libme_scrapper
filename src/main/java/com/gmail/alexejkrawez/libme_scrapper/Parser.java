@@ -177,6 +177,12 @@ public class Parser {
         getChapters(checkedChapters);
     }
 
+    protected static void getData(List<Chapter> checkedChapters, String volumeNumber, int nChaptersPart) {
+        documentCreator = new DocumentCreator();
+        documentCreator.createDocument("Том %s часть %s %s".formatted(volumeNumber, nChaptersPart, title));
+        getChapters(checkedChapters);
+    }
+
     // to index is included
     private static void getChapters(List<Chapter> checkedChapters) {
 //        List<Chapter> chapters = tableOfContents;
@@ -266,9 +272,17 @@ public class Parser {
         }
     }
 
-    protected static String saveDocument(String pathToSave, String volumeName) {
-        if (documentCreator.saveDocument(pathToSave, "Том %s %s".formatted(volumeName, title))) {
-            return "Том " + volumeName + " сохранён!";
+    protected static String saveDocument(String pathToSave, String volumeNumber) {
+        if (documentCreator.saveDocument(pathToSave, "Том %s %s".formatted(volumeNumber, title))) {
+            return "Том " + volumeNumber + " сохранён!";
+        } else {
+            return "Возникла ошибка при сохранении!";
+        }
+    }
+
+    protected static String saveDocument(String pathToSave, String volumeNumber, int nChaptersPart) {
+        if (documentCreator.saveDocument(pathToSave, "Том %s часть %s %s".formatted(volumeNumber, nChaptersPart, title))) {
+            return "Том %s часть %s сохранён!".formatted(volumeNumber, nChaptersPart);
         } else {
             return "Возникла ошибка при сохранении!";
         }
