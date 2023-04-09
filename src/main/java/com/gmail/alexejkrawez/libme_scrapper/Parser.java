@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -84,8 +85,10 @@ public class Parser {
         // create a browser
         EdgeOptions options = new EdgeOptions();
         options.addArguments("--headless=new");
-        options.addArguments("--start-maximized");
+        options.addArguments("--remote-allow-origins=*");
         EdgeDriver driver = new EdgeDriver(options);
+        Dimension dimension = new Dimension(1920, 1080);
+        driver.manage().window().setSize(dimension);
 
         // get url from TextField
         driver.navigate().to(url);
@@ -157,16 +160,20 @@ public class Parser {
 //    }
 
     protected static void getData(List<Chapter> checkedChapters) {
-        // get chapters
         documentCreator = new DocumentCreator();
         documentCreator.createDocument(title);
         getChapters(checkedChapters);
     }
 
     protected static void getData(List<Chapter> checkedChapters, int nChaptersPart) {
-        // get chapters
         documentCreator = new DocumentCreator();
         documentCreator.createDocument("%s - часть %s".formatted(title, nChaptersPart));
+        getChapters(checkedChapters);
+    }
+
+    protected static void getData(List<Chapter> checkedChapters, String volumeNumber) {
+        documentCreator = new DocumentCreator();
+        documentCreator.createDocument("Том %s %s".formatted(volumeNumber, title));
         getChapters(checkedChapters);
     }
 
@@ -259,9 +266,9 @@ public class Parser {
         }
     }
 
-    protected static String saveDocument(String pathToSave, boolean isDividedByVolumes, boolean isDividedByNChapters) {
-        if (documentCreator.saveDocument(pathToSave, title)) {
-            return "Сохранено!";
+    protected static String saveDocument(String pathToSave, String volumeName) {
+        if (documentCreator.saveDocument(pathToSave, "Том %s %s".formatted(volumeName, title))) {
+            return "Том " + volumeName + " сохранён!";
         } else {
             return "Возникла ошибка при сохранении!";
         }

@@ -11,21 +11,19 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -159,6 +157,47 @@ public class ControllerHelper {
         if (chapters.isEmpty()) {
             log.error("Zero checkboxes selected");
             throw new IllegalArgumentException("Zero checkboxes selected");
+        }
+
+        return chapters;
+    }
+
+    protected static LinkedHashMap<String, ArrayList<Chapter>> checkVolumes(List<Chapter> checkedChapters) {
+//        List<ArrayList<Chapter>> chapters = new ArrayList<>();
+        LinkedHashMap<String, ArrayList<Chapter>> chapters = new LinkedHashMap<>();
+        Pattern p = Pattern.compile("[Ттом\\u00A0\\s]{3,5}([0-9.,:;\\-]+)");
+        Matcher m;
+        String s = "";
+
+        for (Chapter chapter : checkedChapters) {
+            m = p.matcher(chapter.getChapterName());
+            if (m.find()) {
+                chapter.setChapterName(
+                        chapter.getChapterName().replaceFirst("[Ттом\\u00A0\\s]{3,5}[0-9.,:;\\-\\u00A0\\s]+", "")
+                );
+
+                if ( s.contains(m.group(1)) ) {
+                    chapters.get(s).add(chapter);
+                } else {
+                    s = m.group(1);
+                    chapters.put(s, new ArrayList<Chapter>());
+                    chapters.get(s).add(chapter);
+                }
+            } else {
+                log.error("Chapter has no volume: " + chapter.getChapterName());
+            }
+//            if (m.find()) {
+//                if ( s.contains(m.group()) ) {
+//                    chapters.get(i).add(chapter);
+//                } else {
+//                    s = m.group();
+//                    i++;
+//                    chapters.add(new ArrayList<Chapter>());
+//                    chapters.get(i).add(chapter);
+//                }
+//            } else {
+//                log.error("Chapter has no volume: " + chapter.getChapterName());
+//            }
         }
 
         return chapters;

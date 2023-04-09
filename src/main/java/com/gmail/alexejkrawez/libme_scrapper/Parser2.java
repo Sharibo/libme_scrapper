@@ -16,6 +16,17 @@
 //        driver.manage().window().maximize();
 //        EdgeDriver driver = new EdgeDriver();
 
+
+//<!--        <dependency>-->
+//<!--            <groupId>org.seleniumhq.selenium</groupId>-->
+//<!--            <artifactId>selenium-http-jdk-client</artifactId>-->
+//<!--            <version>4.8.3</version>-->
+//<!--        </dependency>-->
+//        System.setProperty("webdriver.http.factory", "jdk-http-client");
+//        options.addArguments("--start-maximized");
+
+
+
                 //get url from TextField
 //                driver.navigate().to(url);
 

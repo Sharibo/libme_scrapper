@@ -23,11 +23,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.checkPath;
 import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.checkUrl;
+import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.checkVolumes;
 import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.getCheckedChapters;
 import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.initializeTableView;
 import static com.gmail.alexejkrawez.libme_scrapper.ControllerHelper.reverseTable;
@@ -52,9 +56,11 @@ public class Controller {
     @FXML
     private Button reverseTableShowButton;
     @FXML
-    private TextField nChaptersField;
+    private ToggleButton isDividedByVolumesButton;
     @FXML
     private ToggleButton isDividedByNChaptersButton;
+    @FXML
+    private TextField nChaptersField;
     @FXML
     private TableView<TableRow> tableView;
     @FXML
@@ -188,9 +194,17 @@ public class Controller {
                             if (isDividedByVolumes & isDividedByNChapters) {
 
                             } else if (isDividedByVolumes) {
+                                Map<String, ArrayList<Chapter>> map = checkVolumes(checkedChapters);
+                                Set<String> volumeNumbers = map.keySet();
+
+                                for (String volumeNumber : volumeNumbers) {
+                                    Parser.getData(map.get(volumeNumber), volumeNumber);
+                                    setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber));
+                                }
 
                             } else if (isDividedByNChapters) {
                                 String n = nChaptersField.getText();
+
                                 if (!n.isBlank()) {
                                     isDividedByNChapters = true;
                                     nChapters = Integer.parseInt(n);
@@ -208,9 +222,11 @@ public class Controller {
                                     Parser.getData(parts.get(i), i + 1);
                                     setFooterLabelAsync(Parser.saveDocument(pathToSave, i + 1));
                                 }
+
                             } else {
                                 Parser.getData(checkedChapters);
                                 setFooterLabelAsync(Parser.saveDocument(pathToSave));
+
                             }
 
                         } else if (throwable.getCause() instanceof IllegalArgumentException) {
@@ -241,11 +257,15 @@ public class Controller {
 
     @FXML
     protected void isDividedByVolumesChapters() {
+        if(isDividedByVolumesButton.isSelected()) {
+            isDividedByVolumes = true;
+        } else {
+            isDividedByVolumes = false;
+        }
     }
 
     @FXML
     protected void isDividedByNChapters() {
-
         if(isDividedByNChaptersButton.isSelected()) {
             isDividedByNChapters = true;
             hBox3.getChildren().add(nChaptersField);
