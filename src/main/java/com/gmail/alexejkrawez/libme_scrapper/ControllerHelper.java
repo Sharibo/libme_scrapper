@@ -164,7 +164,7 @@ public class ControllerHelper {
 
     protected static LinkedHashMap<String, ArrayList<Chapter>> checkVolumes(List<Chapter> checkedChapters) {
         LinkedHashMap<String, ArrayList<Chapter>> chapters = new LinkedHashMap<>();
-//        chapters.put("unknown", new ArrayList<Chapter>()); // TODO сделать проверку на ненахождение томов
+        chapters.put("неизвестный", new ArrayList<Chapter>());
         Pattern p = Pattern.compile("[Ттом\\u00A0\\s]{3,5}([0-9.,:;\\-]+)");
         Matcher m;
         String s = "";
@@ -184,11 +184,11 @@ public class ControllerHelper {
                     chapters.get(s).add(chapter);
                 }
             } else {
-//                if (s.equals("")) {
-//                    chapters.get("unknown").add(chapter); // TODO сделать проверку на ненахождение томов
-//                } else {
-//                    chapters.get(s).add(chapter);
-//                }
+                if (s.equals("")) {
+                    chapters.get("неизвестный").add(chapter);
+                } else {
+                    chapters.get(s).add(chapter);
+                }
 
                 log.warn("Chapter has no volume: " + chapter.getChapterName());
             }

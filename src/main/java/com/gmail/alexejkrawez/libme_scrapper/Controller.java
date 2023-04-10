@@ -204,29 +204,54 @@ public class Controller {
                                 }
 
                                 Map<String, ArrayList<Chapter>> map = checkVolumes(checkedChapters);
+
+                                if (map.get("неизвестный").isEmpty()) {
+                                    map.remove("неизвестный");
+                                }
+
                                 Set<String> volumeNumbers = map.keySet();
 
-                                for (String volumeNumber : volumeNumbers) {
-                                    List<List<Chapter>> parts = Lists.partition(map.get(volumeNumber), nChapters);
+                                if (volumeNumbers.size() == 1 & volumeNumbers.contains("неизвестный")) {
+                                    List<List<Chapter>> parts = Lists.partition(checkedChapters, nChapters);
 
-                                    if (parts.size() == 1) {
-                                        Parser.getData(map.get(volumeNumber), volumeNumber);
-                                        setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber));
-                                    } else {
-                                        for (int i = 0, size = parts.size(); i < size; i++) {
-                                            Parser.getData(parts.get(i), volumeNumber, i + 1);
-                                            setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber, i + 1));
+                                    for (int i = 0, size = parts.size(); i < size; i++) {
+                                        Parser.getData(parts.get(i), i + 1);
+                                        setFooterLabelAsync(Parser.saveDocument(pathToSave, i + 1));
+                                    }
+                                } else {
+                                    for (String volumeNumber : volumeNumbers) {
+                                        List<List<Chapter>> parts = Lists.partition(map.get(volumeNumber), nChapters);
+
+                                        if (parts.size() == 1) {
+                                            Parser.getData(map.get(volumeNumber), volumeNumber);
+                                            setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber));
+                                        } else {
+                                            for (int i = 0, size = parts.size(); i < size; i++) {
+                                                Parser.getData(parts.get(i), volumeNumber, i + 1);
+                                                setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber, i + 1));
+                                            }
                                         }
                                     }
                                 }
 
                             } else if (isDividedByVolumes) {
                                 Map<String, ArrayList<Chapter>> map = checkVolumes(checkedChapters);
+
+                                if (map.get("неизвестный").isEmpty()) {
+                                    map.remove("неизвестный");
+                                }
+
                                 Set<String> volumeNumbers = map.keySet();
 
-                                for (String volumeNumber : volumeNumbers) {
-                                    Parser.getData(map.get(volumeNumber), volumeNumber);
-                                    setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber));
+
+                                if (volumeNumbers.size() == 1 & volumeNumbers.contains("неизвестный")) {
+                                    Parser.getData(checkedChapters);
+                                    setFooterLabelAsync(Parser.saveDocument(pathToSave));
+                                } else {
+                                    for (String volumeNumber : volumeNumbers) {
+                                        Parser.getData(map.get(volumeNumber), volumeNumber);
+                                        setFooterLabelAsync(Parser.saveDocument(pathToSave, volumeNumber));
+                                    }
                                 }
 
                             } else if (isDividedByNChapters) {
@@ -249,6 +274,7 @@ public class Controller {
                                 }
 
                             } else {
+
                                 Parser.getData(checkedChapters);
                                 setFooterLabelAsync(Parser.saveDocument(pathToSave));
 
