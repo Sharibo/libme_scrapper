@@ -33,7 +33,6 @@ public class Parser {
     private static final String CHAPTERS_GETTER = "//div[@data-reader-modal='chapters']";
     private static final String CHAPTERS = "menu__item";
     private static final String CHAPTER_CONTAINER = "div.reader-container.container.container_center";
-    //    private static final String REGEXP = "--““А-а?Я не —могу- ‘поверить, что \"папа.\" это забыл!“- раздался' -–с \"кухни—- выкрик Тули.Насколько –я\u00A0 помню,папа ““попросил приготовь““  ““это““ \u00A0  для меня,    мне  оно  понадобится        на работе...”,отчего мама выглядела раздражённой,так как была всегда очень занята по утрам?а он не предупредил её заранее.";
     private static final String[][] SPELLING_PATTERNS = {
             // doubleSpace
             {"[\\u00A0\\s]{2,}", " "},
@@ -58,7 +57,7 @@ public class Parser {
             // little spruces 4
             {"([^\\u00A0\\s])[\"'‚‘‛’‟„“”‹›«»]{2}", "$1»»"},
     };
-    private static final int[] PAUSES = {50, 100, 150, 200, 250, 300};
+    private static final int[] PAUSES = {100, 150, 200, 250, 300, 350, 400};
     private static final int PAUSES_LENGTH = PAUSES.length;
     private static final Random RANDOM = new Random();
 
@@ -107,21 +106,7 @@ public class Parser {
 
         log.info("Table of content downloaded successfully");
         driver.quit();
-//        List<Chapter> tableOfContents = new ArrayList<>();
-//        tableOfContents.add(new Chapter("Том 1 Глава 123 Нисхождение владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 2 Глава 124 Нисхождение  небес до земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 3 Глава 125 Нисхождение владыки  до земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 4 Глава 126 Нисхождение владыки небес  земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 5 Глава 127 Нисхождение владыки небес до  и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 6 Глава 128 Нисхождение владыки небес до земли   обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 7 Глава 129 Нисхождение владыки небес до земли и восхождение ", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 8 Глава 130 владыки небес до земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 9 Глава 131 небес до земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 10 Глава 132 Нисхождение до земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 11 Глава 133 Нисхождение владыки  земли и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 12 Глава 134 Нисхождение владыки небес  и восхождение обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 13 Глава 135 Нисхождение владыки небес до  обратно", "https://ranobelib.me/"));
-//        tableOfContents.add(new Chapter("Том 14 Глава 136 Нисхождение владыки небес до земли", "https://ranobelib.me/"));
+
         return tableOfContents;
     }
 
@@ -145,19 +130,6 @@ public class Parser {
             return "Unknown";
         }
     }
-
-//    private static List<Chapter> getTableOfContents(EdgeDriver driver) {
-//        WebElement chaptersGetter = driver.findElement(By.xpath(CHAPTERS_GETTER));
-//        new Actions(driver).moveToElement(chaptersGetter).click().perform();
-//        List<WebElement> chaptersList = driver.findElements(By.className(CHAPTERS));
-//        List<Chapter> chaptersLinks = new ArrayList<>(chaptersList.size());
-//        chaptersList.forEach(element ->
-//                chaptersLinks.add(new Chapter(element.getText(), element.getAttribute("href")))
-//        );
-//        Collections.reverse(chaptersLinks);
-//        log.info("Table of content downloaded successfully");
-//        return chaptersLinks;
-//    }
 
     protected static void getData(List<Chapter> checkedChapters) {
         documentCreator = new DocumentCreator();
@@ -185,12 +157,6 @@ public class Parser {
 
     // to index is included
     private static void getChapters(List<Chapter> checkedChapters) {
-//        List<Chapter> chapters = tableOfContents;
-        //TODO: нарезать на несколько листов по 50- штук в каждом
-//        if (from != 0 && tableOfContents.size() - 1 != to) {
-//            chapters = tableOfContents.subList(from, to + 1);
-//        }
-
         for (int i = 0, chaptersSize = checkedChapters.size() - 1; i < chaptersSize; i++) {
             Chapter chapter = checkedChapters.get(i);
             documentCreator.addChapterName(chapter.getChapterName());
@@ -287,22 +253,6 @@ public class Parser {
             return "Возникла ошибка при сохранении!";
         }
     }
-
-    //TODO: поиск ссылки на следующую главу или всё -
-    //TODO: наполнение главы +
-    //TODO: переход на следующую интернет-страницу и повтор +
-    //TODO: возможно вордовские объекты-документы делать новые (возможно через 5-10 глав) и потом склеивать их.
-    //TODO: или даже после определённого количества глав временно их выгружать, а то поломается на 700+ главе и кирдык
-    //TODO: сделать кнопочку+поле для записи только ограниченного числа глав, а не до победы
-
-    //TODO: метод с созданием вордовского документа +
-    //TODO: метод и переменная, содержащие стандартный абзац для текста с настроенным стилем (или стиль можно применить глобально?) + глобально нельзя
-    //TODO: метод и переменная, содержащие стандартный заголовок главы с настроенным стилем +
-    //TODO: метод с проверкой ошибок в этом абзаце +
-    //TODO: метод с добавлением текста в стандартный абзац и (сразу или нет?) добавлением в документ +
-    //TODO: метод с добавлением разрыва страницы в конце каждой главы + но добавляет и к последней главе, что тупо
-    //TODO: сохранение документа +
-
 
 }
 

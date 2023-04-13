@@ -112,17 +112,12 @@ public class Controller {
 
     }
 
-    // TODO интерфейс +/-
-    // TODO поле для ввода ссылки +
-    // TODO поле ввода пути для сохранения + кнопка выбрать папку сохранения (запоминается в файлик настроек) +
-    // TODO поле с таблицей / список глав + галочками + ссылкой на главу +
-    // TODO отметка всех глав / снятие выделения +
-    // TODO отметка части глав +
-    // TODO разбивать ли на тома с сохранением в отдельные файлы + возможно маска томов
+    // TODO в файл сохранять нажата или отжата кнопки по томам и по частям и
+    // TODO дизейблить эти кнопки при сохранении
+    // TODO снятие выделения +
+    // TODO маска названий файлов
     // TODO добавлять ли автора + можно перезаписать как зовут автора на кириллицу или что хочешь
-    // TODO поле футера +
     // TODO хелп с указанием автора и версии программы +/-
-    // TODO смена темы день/ночь +
 
     @FXML
     protected void getTableOfContents() {
@@ -133,6 +128,7 @@ public class Controller {
         if (checkUrl(url, footerLabel)) {
             footerLabel.setText("Ожидайте, загружается оглавление...");
             setDisable(saveToLocalButton, globalCheckbox, reverseTableShowButton);
+            tableView.requestFocus();
 
             if (tableOfContents != null && !tableOfContents.isEmpty()) {
                 tableOfContents.clear();
@@ -184,7 +180,7 @@ public class Controller {
 
         String pathToSave = savePathField.getText().strip();
 
-        // получение и проверка пути сохранения
+        // get and check path to saving
         if (checkPath(pathToSave, footerLabel)) {
 
             CompletableFuture.supplyAsync(() -> getCheckedChapters(tableOfContents))
@@ -308,7 +304,7 @@ public class Controller {
 
     @FXML
     protected void isDividedByVolumesChapters() {
-        if(isDividedByVolumesButton.isSelected()) {
+        if (isDividedByVolumesButton.isSelected()) {
             isDividedByVolumes = true;
         } else {
             isDividedByVolumes = false;
@@ -317,7 +313,7 @@ public class Controller {
 
     @FXML
     protected void isDividedByNChapters() {
-        if(isDividedByNChaptersButton.isSelected()) {
+        if (isDividedByNChaptersButton.isSelected()) {
             isDividedByNChapters = true;
             hBox3.getChildren().add(nChaptersField);
         } else {

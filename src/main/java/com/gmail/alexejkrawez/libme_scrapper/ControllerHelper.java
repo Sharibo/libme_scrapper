@@ -14,6 +14,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -49,12 +51,12 @@ public class ControllerHelper {
         checkboxColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
         checkboxColumn.setCellFactory(new Callback<TableColumn<TableRow, Boolean>, TableCell<TableRow, Boolean>>() {
             @Override
-            public TableCell<TableRow, Boolean> call( TableColumn<TableRow, Boolean> param ) {
+            public TableCell<TableRow, Boolean> call(TableColumn<TableRow, Boolean> param) {
                 CheckBoxTableCell<TableRow, Boolean> cell = new CheckBoxTableCell<TableRow, Boolean>();
                 cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new CheckboxMouseClickEventHandler());
                 return cell;
             }
-        } );
+        });
         checkboxColumn.setId("checkboxColumn");
         checkboxColumn.setMinWidth(32.0);
         checkboxColumn.setMaxWidth(32.0);
@@ -77,11 +79,20 @@ public class ControllerHelper {
         // selecting actions
         TableView.TableViewSelectionModel<TableRow> selectionModel = tableView.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
-        selectionModel.selectedItemProperty().addListener(new ChangeListener<TableRow>(){
+        selectionModel.selectedItemProperty().addListener(new ChangeListener<TableRow>() {
             @Override
             public void changed(ObservableValue<? extends TableRow> observable, TableRow oldValue, TableRow newValue) {
-                if(newValue != null) {
+                if (newValue != null) {
                     selectedIndices = selectionModel.getSelectedIndices();
+                }
+            }
+        });
+
+        tableView.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    selectionModel.clearSelection();
                 }
             }
         });
@@ -176,7 +187,7 @@ public class ControllerHelper {
                         chapter.getChapterName().replaceFirst("[Ттом\\u00A0\\s]{3,5}[0-9.,:;\\-\\u00A0\\s]+", "")
                 );
 
-                if ( s.contains(m.group(1)) ) {
+                if (s.contains(m.group(1))) {
                     chapters.get(s).add(chapter);
                 } else {
                     s = m.group(1);
