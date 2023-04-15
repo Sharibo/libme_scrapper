@@ -182,7 +182,7 @@ public class Controller {
     @FXML
     protected void saveToLocal() {
         setDisable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
-                   reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, tableView);
+                   reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, nChaptersField, tableView);
 
         String pathToSave = savePathField.getText().strip();
 
@@ -202,7 +202,7 @@ public class Controller {
                                 } else {
                                     setFooterLabelAsync("Не указано число глав для разделения на части!");
                                     setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
-                                              reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton,  tableView);
+                                              reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, nChaptersField, tableView);
                                     return;
                                 }
 
@@ -265,7 +265,7 @@ public class Controller {
                                 } else {
                                     setFooterLabelAsync("Не указано число глав для разделения на части!");
                                     setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
-                                              reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, tableView);
+                                              reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, nChaptersField, tableView);
                                     return;
                                 }
 
@@ -291,13 +291,13 @@ public class Controller {
                             setFooterLabelAsync("Возникла ошибка при обработке глав!");
                         }
                         setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
-                                  reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, tableView);
+                                  reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, nChaptersField, tableView);
                     }); // non-blocking
 
 
         } else {
             setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
-                      reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton,  tableView);
+                      reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, nChaptersField, tableView);
         }
 
     }
