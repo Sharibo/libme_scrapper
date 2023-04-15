@@ -22,7 +22,6 @@ public class LibMeScrapper extends Application {
     private static final Stage helpStage = new Stage();
     private static String lastOpenedDirectory = "user.home";
     private static String theme = "css/light-style.css";
-    private static boolean isMaximized = false;
 
     protected static String getLastOpenedDirectory() {
         return lastOpenedDirectory;
