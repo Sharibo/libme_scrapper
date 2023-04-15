@@ -5,12 +5,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 
 import java.awt.*;
@@ -40,6 +44,23 @@ public class ControllerHelper {
     private static boolean isReversed = false;
     private static ObservableList<Integer> selectedIndices;
 
+
+    protected static void initializeNChaptersField(TextField nChaptersField, int nChapters) {
+        nChaptersField.setId("nChaptersField");
+        nChaptersField.setAlignment(Pos.CENTER);
+        nChaptersField.setMaxHeight(28.0);
+        nChaptersField.setMinHeight(28.0);
+        nChaptersField.setMaxWidth(48.0);
+        nChaptersField.setMinWidth(48.0);
+        nChaptersField.setAccessibleText("nChaptersField");
+        nChaptersField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), nChapters, change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("([1-9][0-9]{0,3})?")) {
+                return change;
+            }
+            return null;
+        }));
+    }
 
     protected static void initializeTableView(TableView<TableRow> tableView) {
         tableView.setId("tableView");

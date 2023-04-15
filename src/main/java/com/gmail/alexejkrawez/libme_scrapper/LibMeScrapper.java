@@ -54,10 +54,11 @@ public class LibMeScrapper extends Application {
         final String location = System.getProperty("user.dir");
         final String settingsFile = "/settings.properties";
         final Properties properties = new Properties();
-        double savedPosX = 300.0;
-        double savedPosY = 300.0;
-        double savedWidth = 450.0;
+        double savedPosX   = 300.0;
+        double savedPosY   = 300.0;
+        double savedWidth  = 450.0;
         double savedHeight = 160.0;
+        int savedNChapters = 50;
 
 
         try (InputStream settingsStream = new FileInputStream(location + settingsFile)) {
@@ -66,11 +67,13 @@ public class LibMeScrapper extends Application {
             e.printStackTrace();
         }
 
+        // set properties from file
         try {
             savedPosX = Double.parseDouble(properties.getProperty("windowPosX", "300.0"));
             savedPosY = Double.parseDouble(properties.getProperty("windowPosY", "300.0"));
-            savedWidth = Double.parseDouble(properties.getProperty("windowWith", "432.0"));
+            savedWidth = Double.parseDouble(properties.getProperty("windowWith", "450.0"));
             savedHeight = Double.parseDouble(properties.getProperty("windowHeight", "160.0"));
+            savedNChapters = Integer.parseInt(properties.getProperty("nChapters", "50"));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -80,7 +83,14 @@ public class LibMeScrapper extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(LibMeScrapper.class.getResource("index.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        Controller controller = fxmlLoader.getController();
 
+        controller.setIsDividedByVolumesButton(Boolean.parseBoolean(properties.getProperty("isDividedByVolumes", "false")));
+        controller.isDividedByVolumesChapters();
+        controller.setNChapters(savedNChapters);
+        controller.setIsDividedByNChaptersButton(Boolean.parseBoolean(properties.getProperty("isDividedByNChapters", "false")));
+        ControllerHelper.initializeNChaptersField(controller.getNChaptersField(), savedNChapters);
+        controller.isDividedByNChapters();
 
         try (InputStream logoStream = getClass().getResourceAsStream("icons/logo.png")) { // TODO другое лого
             Image logo = new Image(logoStream);
@@ -104,36 +114,31 @@ public class LibMeScrapper extends Application {
         stage.show();
 
         initializeHelpStage();
-        setOnExitActions(stage, location, settingsFile, properties);
+        setOnExitActions(controller, stage, location, settingsFile, properties);
 
     }
 
 
-    private static void setOnExitActions(Stage stage, String location, String settingsFile, Properties properties) {
+    private static void setOnExitActions(Controller controller, Stage stage, String location, String settingsFile, Properties properties) {
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 
-            if (stage.maximizedProperty().get()) {
-                properties.setProperty("theme", theme);
-                properties.setProperty("lastOpenedDirectory", lastOpenedDirectory);
-
-                try (FileOutputStream fus = new FileOutputStream(location + settingsFile)) {
-                    properties.store(fus, "Saved settings");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
+            if (!stage.maximizedProperty().get()) {
                 properties.setProperty("windowPosX", Double.toString(stage.getX()));
                 properties.setProperty("windowPosY", Double.toString(stage.getY()));
                 properties.setProperty("windowWith", Double.toString(stage.getWidth()));
                 properties.setProperty("windowHeight", Double.toString(stage.getHeight()));
-                properties.setProperty("theme", theme);
-                properties.setProperty("lastOpenedDirectory", lastOpenedDirectory);
+            }
 
-                try (FileOutputStream fus = new FileOutputStream(location + settingsFile)) {
-                    properties.store(fus, "Saved settings");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            properties.setProperty("theme", theme);
+            properties.setProperty("lastOpenedDirectory", lastOpenedDirectory);
+            properties.setProperty("isDividedByVolumes", Boolean.toString(controller.getIsDividedByVolumes()));
+            properties.setProperty("isDividedByNChapters", Boolean.toString(controller.getIsDividedByNChapters()));
+            properties.setProperty("nChapters", controller.getNChaptersField().getText());
+
+            try (FileOutputStream fus = new FileOutputStream(location + settingsFile)) {
+                properties.store(fus, "Saved settings");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             helpStage.close();
@@ -164,8 +169,8 @@ public class LibMeScrapper extends Application {
         }
 
         LibMeScrapper.getHelpStage().setTitle("Справка");
-        LibMeScrapper.getHelpStage().setMinHeight(450.0);
         LibMeScrapper.getHelpStage().setMinWidth(375.0);
+        LibMeScrapper.getHelpStage().setMinHeight(450.0);
 
         LibMeScrapper.getHelpStage().setScene(scene);
     }

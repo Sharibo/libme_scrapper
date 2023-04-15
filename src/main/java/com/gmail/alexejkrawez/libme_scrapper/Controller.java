@@ -76,6 +76,29 @@ public class Controller {
     private int nChapters = 50;
     private List<Chapter> tableOfContents;
 
+
+    public boolean getIsDividedByVolumes() {
+        return isDividedByVolumes;
+    }
+    public void setIsDividedByVolumesButton(boolean isDividedByVolumesButton) {
+        this.isDividedByVolumesButton.setSelected(isDividedByVolumesButton);
+    }
+
+    public boolean getIsDividedByNChapters() {
+        return isDividedByNChapters;
+    }
+    public void setIsDividedByNChaptersButton(boolean isDividedByNChaptersButton) {
+        this.isDividedByNChaptersButton.setSelected(isDividedByNChaptersButton);
+    }
+
+    public TextField getNChaptersField() {
+        return nChaptersField;
+    }
+    public void setNChapters(int nChapters) {
+        this.nChapters = nChapters;
+    }
+
+
     @FXML
     public void initialize() {
 
@@ -93,27 +116,13 @@ public class Controller {
             }
         });
 
-        nChaptersField = new TextField();
+        nChaptersField = new TextField(); // initialization in LibMeScrapper class
         hBox3.setMargin(nChaptersField, new Insets(0.0, 0.0, 2.0, 2.0));
-        nChaptersField.setId("nChaptersField");
-        nChaptersField.setAlignment(Pos.CENTER);
-        nChaptersField.setMaxHeight(28.0);
-        nChaptersField.setMinHeight(28.0);
-        nChaptersField.setMaxWidth(48.0);
-        nChaptersField.setMinWidth(48.0);
-        nChaptersField.setAccessibleText("nChaptersField");
-        nChaptersField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), nChapters, change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("([1-9][0-9]{0,3})?")) {
-                return change;
-            }
-            return null;
-        }));
 
     }
 
     // TODO в файл сохранять нажата или отжата кнопки по томам и по частям и
-    // TODO дизейблить эти кнопки при сохранении
+    // TODO дизейблить эти кнопки при сохранении +
     // TODO снятие выделения +
     // TODO маска названий файлов
     // TODO добавлять ли автора + можно перезаписать как зовут автора на кириллицу или что хочешь
@@ -175,13 +184,14 @@ public class Controller {
 
     @FXML
     protected void saveToLocal() {
-        setDisable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                   globalCheckbox, reverseTableShowButton, tableView);
+        setDisable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
+                   reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, tableView);
 
         String pathToSave = savePathField.getText().strip();
 
         // get and check path to saving
         if (checkPath(pathToSave, footerLabel)) {
+            footerLabel.setText("Начато сохранение! Пожалуйста, подождите...");
 
             CompletableFuture.supplyAsync(() -> getCheckedChapters(tableOfContents))
                     .whenCompleteAsync((checkedChapters, throwable) -> {
@@ -194,8 +204,8 @@ public class Controller {
                                     nChapters = Integer.parseInt(n);
                                 } else {
                                     setFooterLabelAsync("Не указано число глав для разделения на части!");
-                                    setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                                              globalCheckbox, reverseTableShowButton, tableView);
+                                    setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
+                                              reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton,  tableView);
                                     return;
                                 }
 
@@ -257,8 +267,8 @@ public class Controller {
                                     nChapters = Integer.parseInt(n);
                                 } else {
                                     setFooterLabelAsync("Не указано число глав для разделения на части!");
-                                    setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                                              globalCheckbox, reverseTableShowButton, tableView);
+                                    setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
+                                              reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, tableView);
                                     return;
                                 }
 
@@ -283,14 +293,14 @@ public class Controller {
                             log.error("saveToLocal() slave thread failed: " + throwable.getLocalizedMessage());
                             setFooterLabelAsync("Возникла ошибка при обработке глав!");
                         }
-                        setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                                  globalCheckbox, reverseTableShowButton, tableView);
+                        setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
+                                  reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton, tableView);
                     }); // non-blocking
 
 
         } else {
-            setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton,
-                      globalCheckbox, reverseTableShowButton, tableView);
+            setEnable(getTableOfContentsButton, saveToLocalButton, setLocalPathButton, globalCheckbox,
+                      reverseTableShowButton, isDividedByVolumesButton, isDividedByNChaptersButton,  tableView);
         }
 
     }
