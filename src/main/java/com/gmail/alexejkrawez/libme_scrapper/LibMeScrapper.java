@@ -168,8 +168,8 @@ public class LibMeScrapper extends Application {
         }
 
         LibMeScrapper.getHelpStage().setTitle("Справка");
-        LibMeScrapper.getHelpStage().setMinWidth(375.0);
-        LibMeScrapper.getHelpStage().setMinHeight(450.0);
+        LibMeScrapper.getHelpStage().setMinWidth(400.0);
+        LibMeScrapper.getHelpStage().setMinHeight(300.0);
 
         LibMeScrapper.getHelpStage().setScene(scene);
     }

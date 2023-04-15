@@ -10,8 +10,8 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:id="anchorPane"
-            prefHeight="450.0"
-            prefWidth="375.0"
+            prefHeight="475.0"
+            prefWidth="435.0"
             fx:controller="com.gmail.alexejkrawez.libme_scrapper.HelpWindowController">
 
     <VBox AnchorPane.topAnchor="10"
