@@ -24,7 +24,7 @@ public class HelpWindowController {
                  Нажмите кнопку "Сохранить" и дождитесь сообщения об успешном сохранении. Это также может занимать продолжительное время, на произведении в 1000+ глав сохранение может длится более 15 минут.
             """;
     private static final String ABOUT = "\n     Автор: Sharibo\n     Версия: 1.0. Последнюю версию см. на github.com:";
-    private static final String GITHUB = "https://github.com";
+    private static final String GITHUB = "https://github.com/Sharibo/libme_scrapper/releases";
 
     @FXML
     Label helpText;
